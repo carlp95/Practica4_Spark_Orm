@@ -16,6 +16,8 @@ public class User {
 
     private boolean isAdministrator;
 
+    private boolean isAuthor;
+
     @OneToMany(mappedBy = "author")
     private List<Comment> commentList;
 
@@ -77,5 +79,13 @@ public class User {
 
     public void setArticleList(List<Article> articleList) {
         this.articleList = articleList;
+    }
+
+    public boolean isAuthor() {
+        return isAuthor;
+    }
+
+    public void setAuthor(boolean author) {
+        isAuthor = author;
     }
 }
