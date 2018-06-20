@@ -21,16 +21,15 @@ public class Article {
 
     private Date date;
 
-    @Column(name = "tag_id")
     @ManyToMany()
-    private Set<Tag> tagList;
+    private List<Tag> tagList;
 
     @OneToMany(mappedBy = "article")
     private List<Comment> commentList;
 
     public Article() { }
 
-    public Article(String title, String body, User author, Date date, Set<Tag> tagList) {
+    public Article(String title, String body, User author, Date date, List<Tag> tagList) {
         this.title = title;
         this.body = body;
         this.author = author;
@@ -78,11 +77,11 @@ public class Article {
         this.date = date;
     }
 
-    public Set<Tag> getTagList() {
+    public List<Tag> getTagList() {
         return tagList;
     }
 
-    public void setTagList(Set<Tag> tagList) {
+    public void setTagList(List<Tag> tagList) {
         this.tagList = tagList;
     }
 

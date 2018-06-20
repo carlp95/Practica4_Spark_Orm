@@ -15,17 +15,16 @@ public class BootStrapServices {
 
     }
 
-    public static BootStrapServices getInstancia(){
+    public static BootStrapServices getInstance(){
         if(instancia == null){
             instancia=new BootStrapServices();
         }
         return instancia;
     }
 
-    public void startDb() {
+    private void startDb() {
         try {
-            Server.createTcpServer("-tcpPort",
-                    "9092",
+            Server.createTcpServer(
                     "-tcpAllowOthers",
                     "-tcpDaemon").start();
         }catch (SQLException ex){

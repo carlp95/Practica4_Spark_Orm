@@ -65,24 +65,26 @@ public class Main {
         configuration.setClassForTemplateLoading(Main.class, "/templates");
         FreeMarkerEngine freemarkerEngine = new FreeMarkerEngine(configuration);
 
-        BootStrapServices.getInstancia().init();
+        BootStrapServices.getInstance().init();
         BasicPasswordEncryptor encryptor = new BasicPasswordEncryptor();
+
         if(UserServices.getInstance().findAll().isEmpty()){
             User user = new User("admin","Administrador",encryptor.encryptPassword("admin123"),true, true);
             UserServices.getInstance().create(user);
         }
 
         get("/",(request,response) ->{
-            Map<String, Object> atributes = new HashMap<>();
-            atributes.put("title", "Banana Blog");
-            atributes.put("articles",ArticleServices.getInstance().findAll());
+            Map<String, Object> attributes = new HashMap<>();
+            attributes.put("title", "Banana Blog");
+            attributes.put("articles", ArticleServices.getInstance().findAll());
+
             if(request.session().attribute("userValue") == null){
-                atributes.put("userValue", "vacio");
+                attributes.put("userValue", "vacio");
             }else {
-                atributes.put("userValue", request.session().attribute("userValue"));
+                attributes.put("userValue", request.session().attribute("userValue"));
             }
 
-            return new ModelAndView(atributes,"index.ftl");
+            return new ModelAndView(attributes,"index.ftl");
         },freemarkerEngine);
 
         get("/login",(request, response) ->{
@@ -242,7 +244,7 @@ public class Main {
             article.setBody(request.queryParams("artBody"));
             article.setAuthor(request.session().attribute("userValue"));
             article.setDate(new Date());
-            Set<Tag> tags = new HashSet<>();
+            List<Tag> tags = new ArrayList<>();
             for(String tag : request.queryParams("tag").split(",")){
                 tags.add(new Tag(tag));
             }
@@ -301,7 +303,7 @@ public class Main {
             article.setBody(request.queryParams("artBody"));
             article.setDate(new Date());
 
-            Set<Tag> tags = new HashSet<>();
+            List<Tag> tags = new ArrayList<>();
             for(String tag : request.queryParams("tag").split(",")){
                 tags.add(new Tag(tag));
             }

@@ -11,8 +11,7 @@ public class Tag {
 
     private String tagName;
 
-    @Column(name = "article_id")
-    @ManyToMany(mappedBy = "tagList", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "tagList")
     private List<Article> articleList;
 
     public Tag() { }

@@ -67,7 +67,6 @@ public class Dao<T> {
             em.getTransaction().begin();
             em.persist(entity);
             em.getTransaction().commit();
-
         }catch (Exception ex){
             em.getTransaction().rollback();
             System.out.println(ex.getMessage());
@@ -111,8 +110,6 @@ public class Dao<T> {
         EntityManager em = getEntityManager();
         try{
             return em.find(entityClass, id);
-        } catch (Exception ex){
-            throw  ex;
         } finally {
             em.close();
         }
@@ -124,9 +121,7 @@ public class Dao<T> {
             CriteriaQuery<T> criteriaQuery = em.getCriteriaBuilder().createQuery(entityClass);
             criteriaQuery.select(criteriaQuery.from(entityClass));
             return em.createQuery(criteriaQuery).getResultList();
-        } catch (Exception ex){
-            throw  ex;
-        }finally {
+        } finally {
             em.close();
         }
     }

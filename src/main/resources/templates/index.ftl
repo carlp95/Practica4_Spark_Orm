@@ -2,7 +2,7 @@
 
 <@gen.base user = userValue>
 
-    <#list articles?reverse>
+    <#list articles>
         <ul>
             <#items as article>
                 <div class="card mx-auto mb-3" style="width: 750px">
