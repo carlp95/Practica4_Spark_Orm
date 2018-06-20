@@ -22,10 +22,10 @@ public class Article implements Serializable {
 
     private Date date;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany()
     private List<Tag> tagList;
 
-    @OneToMany(mappedBy = "article", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "article")
     private List<Comment> commentList;
 
     public Article() { }
