@@ -68,7 +68,7 @@ public class Main {
         BootStrapServices.getInstancia().init();
         BasicPasswordEncryptor encryptor = new BasicPasswordEncryptor();
         if(UserServices.getInstance().findAll().isEmpty()){
-            User user = new User("admin","Administrador",encryptor.encryptPassword("admin123"),true);
+            User user = new User("admin","Administrador",encryptor.encryptPassword("admin123"),true, true);
             UserServices.getInstance().create(user);
         }
 

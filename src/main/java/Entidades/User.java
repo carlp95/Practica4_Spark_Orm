@@ -26,11 +26,12 @@ public class User {
 
     public User() { }
 
-    public User(String username, String name, String password, boolean isAdministrator) {
+    public User(String username, String name, String password, boolean isAdministrator, boolean isAuthor) {
         this.username = username;
         this.name = name;
         this.password = password;
         this.isAdministrator = isAdministrator;
+        this.isAuthor = isAuthor;
     }
 
     public String getUsername() {
