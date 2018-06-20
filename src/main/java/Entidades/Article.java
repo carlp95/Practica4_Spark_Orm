@@ -1,12 +1,13 @@
 package Entidades;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 @Entity
-public class Article {
+public class Article implements Serializable {
     @Id
     @GeneratedValue
     private long id;
@@ -21,10 +22,10 @@ public class Article {
 
     private Date date;
 
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Tag> tagList;
 
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "article", fetch = FetchType.EAGER)
     private List<Comment> commentList;
 
     public Article() { }

@@ -4,9 +4,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import java.io.Serializable;
 
 @Entity
-public class Comment {
+public class Comment implements Serializable {
     @Id
     @GeneratedValue
     private long id;

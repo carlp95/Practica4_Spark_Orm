@@ -1,17 +1,18 @@
 package Entidades;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
-public class Tag {
+public class Tag implements Serializable {
     @Id
     @GeneratedValue
     private long id;
 
     private String tagName;
 
-    @ManyToMany(mappedBy = "tagList")
+    @ManyToMany(mappedBy = "tagList", fetch = FetchType.EAGER)
     private List<Article> articleList;
 
     public Tag() { }
