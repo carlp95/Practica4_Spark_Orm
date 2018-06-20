@@ -27,7 +27,7 @@
             </div>
 
             <div class="card-footer text-muted">
-                Autor: ${article.author.username} - ${article.date}
+                Autor: ${article.author.name} - ${article.date}
             </div>
         </div>
     </div>

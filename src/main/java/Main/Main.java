@@ -208,13 +208,13 @@ public class Main {
             user.setName(request.queryParams("name"));
             if(request.queryParams("role").equals("administrator")){
                 user.setAdministrator(true);
-                //user.setAuthor(true);
+                user.setAuthor(true);
             }else if(request.queryParams("role").equals("author")){
-              //  user.setAuthor(true);
+                user.setAuthor(true);
                 user.setAdministrator(false);
             }else {
                 user.setAdministrator(false);
-                //user.setAuthor(false);
+                user.setAuthor(false);
             }
             UserServices.getInstance().create(user);
             //Dao.getInstance().insertarUsuario(user);
