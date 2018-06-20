@@ -72,17 +72,14 @@ public class Main {
             User user = new User("admin","Administrador",encryptor.encryptPassword("admin123"),true, true);
             UserServices.getInstance().create(user);
         }
-
+        //Aplicando todos los filtros
+        new Filters().aplicarFiltros();
         get("/",(request,response) ->{
             Map<String, Object> attributes = new HashMap<>();
             attributes.put("title", "Banana Blog");
             attributes.put("articles", ArticleServices.getInstance().findAll());
+            attributes.put("userValue", request.session().attribute("userValue"));
 
-            if(request.session().attribute("userValue") == null){
-                attributes.put("userValue", "vacio");
-            }else {
-                attributes.put("userValue", request.session().attribute("userValue"));
-            }
 
             return new ModelAndView(attributes,"index.ftl");
         },freemarkerEngine);
@@ -148,6 +145,13 @@ public class Main {
             return null;
         },freemarkerEngine);
 
+        get("/error", (request,response) -> {
+            Map<String, Object> model = new HashMap<>();
+            model.put("titulo","Error");
+            model.put("userValue", request.session().attribute("userValue"));
+            return new ModelAndView(model,"error.ftl");
+        },freemarkerEngine);
+
         get("/show/:id",(request, response) ->{
             Map<String, Object> atributes = new HashMap<>();
             atributes.put("userValue", request.session().attribute("userValue"));
@@ -174,21 +178,16 @@ public class Main {
         },freemarkerEngine);
 
        post("show/createComment/:id",(request,response)->{
-
-            if(request.session().attribute("userValue") == null){
-                response.redirect("/login");
-            }else {
-                Comment comment = new Comment(request.queryParams("comment"),
+           Comment comment = new Comment(request.queryParams("comment"),
                         request.session().attribute("userValue"),
                         ArticleServices.getInstance().find(Long.parseLong(request.params(("id")))));
-                CommentServices.getInstance().create(comment);
+           CommentServices.getInstance().create(comment);
                 /*comentario.setComentario(request.queryParams("comentario"));
                 comentario.setAutor(((Usuario)request.session().attribute("usuarioValue")).getUsername());
                 comentario.setArticulo(Long.parseLong(request.params("id")));
                 Dao.getInstance().insertarComentario(comentario);*/
-                response.redirect("/show/" + request.params("id"));
+           response.redirect("/show/" + request.params("id"));
 
-            }
             return null;
         }, freemarkerEngine);
 
@@ -229,9 +228,7 @@ public class Main {
             Map<String, Object> model = new HashMap<>();
             model.put("title", "Crear Articulo");
             model.put("userValue", request.session().attribute("userValue"));
-            if(request.session().attribute("userValue") == null){
-                response.redirect("/login");
-            }
+
             return new ModelAndView(model, "createArticle.ftl");
         }, freemarkerEngine);
 

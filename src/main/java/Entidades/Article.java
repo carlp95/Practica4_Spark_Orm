@@ -25,7 +25,7 @@ public class Article implements Serializable {
     @ManyToMany()
     private List<Tag> tagList;
 
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "article", fetch = FetchType.EAGER)
     private List<Comment> commentList;
 
     public Article() { }

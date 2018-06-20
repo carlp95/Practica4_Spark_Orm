@@ -26,7 +26,7 @@
                 </#if>
             </div>
 
-            <div class="card-footer text-muted">
+            <div class="card-footer text-muted" style="text-align: center">
                 Autor: ${article.author.name} - ${article.date}
             </div>
         </div>
@@ -46,12 +46,10 @@
     <#if comments?size == 0>
         <div class="card">
             <div class="-body">
-                <h4 class="card-title">Comentarios sobre este Post</h4>
-                <div class="row">
                     <div class="col-xl-5">
+                        <h4 class="card-title">Comentarios sobre este Post</h4>
                         <p class="text-danger">No hay comentarios para este Artículo :(</p>
                     </div>
-                </div>
             </div>
         </div>
     <#else >
