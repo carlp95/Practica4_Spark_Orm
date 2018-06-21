@@ -22,6 +22,19 @@ public class Main {
     private static int articlePage = 1;
 
     public static void insertArticles() {
+//        List<Article> articulos;
+//        Lorem lorem = LoremIpsum.getInstance();
+//
+//        User user = new User()
+//
+//        for (Article articulo : articulos) {
+//            articulo = new Article(
+//                    lorem.getTitle(5, 20),
+//                    lorem.getParagraphs(4, 5),
+//
+//
+//            );
+//        }
 
     }
 
@@ -36,6 +49,7 @@ public class Main {
         BootStrapServices.getInstance().init();
         BasicPasswordEncryptor encryptor = new BasicPasswordEncryptor();
 
+        // Creating default user if there are none
         if(UserServices.getInstance().findAll().isEmpty()){
             User user = new User("admin","Administrador",encryptor.encryptPassword("admin123"),true, true);
             UserServices.getInstance().create(user);
