@@ -3,12 +3,10 @@ package Servicios;
 import Entidades.User;
 import org.jasypt.util.text.BasicTextEncryptor;
 
-import javax.jws.soap.SOAPBinding;
 import java.util.Map;
 
 import static spark.Spark.after;
 import static spark.Spark.before;
-import static spark.Spark.halt;
 
 public class Filters {
     public Filters() {
@@ -92,7 +90,6 @@ public class Filters {
                     response.redirect("/error");
                 }
             }
-
         });
 
         before("/editArticle/*",(request, response) -> {

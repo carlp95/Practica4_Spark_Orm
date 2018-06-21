@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
+
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5">
         <a class="navbar-brand" href="/">Banana Blog</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation" style="">
@@ -48,13 +50,14 @@
     </nav>
 
     <#--contenido-->
-
-    <#nested>
+    <div class="content">
+        <#nested>
+    </div>
 
     <#--footer-->
-    <div class="footer">
+    <footer class="footer">
         <#include "footer.ftl">
-    </div>
+    </footer>
 
 </body>
 </html>
