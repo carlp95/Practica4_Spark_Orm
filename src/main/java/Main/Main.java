@@ -5,22 +5,21 @@ import Entidades.Comment;
 import Entidades.Tag;
 import Entidades.User;
 import Servicios.*;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import freemarker.template.Configuration;
 import org.jasypt.util.password.BasicPasswordEncryptor;
-import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.jasypt.util.text.BasicTextEncryptor;
 import spark.ModelAndView;
 import spark.Session;
 import spark.template.freemarker.FreeMarkerEngine;
 
+import javax.persistence.TypedQuery;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static spark.Spark.*;
 
 public class Main {
-    public static int articlePage;
+    private static int articlePage;
 
     public static void main(String[] args) {
 
@@ -38,20 +37,30 @@ public class Main {
             UserServices.getInstance().create(user);
         }
 
-        //Aplicando todos los filtros
+        //Applying all the filters
         new Filters().aplicarFiltros();
         get("/",(request,response) ->{
-
-        },freemarkerEngine);
+            articlePage = 1;
+            response.redirect("/article/1");
+            return "Hi~";
+        });
 
         get("/article/:page", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
             attributes.put("title", "Banana Blog");
-            attributes.put("articles", ArticleServices.getInstance().findAll());
             attributes.put("userValue", request.session().attribute("userValue"));
 
+            TypedQuery<Article> query = ArticleServices.getInstance()
+                    .getEntityManager()
+                    .createQuery("from Article a order by a.date desc", Article.class);
+
             int endLimit= articlePage * 5;
-            int startLimit = listaFin - 5;
+            int startLimit = endLimit - 5;
+
+            query.setFirstResult(startLimit);
+            query.setMaxResults(endLimit);
+
+            attributes.put("articles", query.getResultList());
 
             return new ModelAndView(attributes,"index.ftl");
         }, freemarkerEngine);
