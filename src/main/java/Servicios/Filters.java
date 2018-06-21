@@ -8,6 +8,7 @@ import java.util.Map;
 
 import static spark.Spark.after;
 import static spark.Spark.before;
+import static spark.Spark.halt;
 
 public class Filters {
     public Filters() {
@@ -56,35 +57,25 @@ public class Filters {
         });
 
         before("/like/*", (request,response) ->{
-            if(UserServices.getInstance().find(((User)request.session().attribute("userValue")).getUsername()) == null
-                    || request.session().attribute("userValue") == null
-                    || request.session().attribute("userValue").equals("vacio")){
+            if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
                 response.redirect("/login");
             }
         });
 
         before("/dislike/*", (request,response) ->{
-            if(UserServices.getInstance().find(((User)request.session().attribute("userValue")).getUsername()) == null
-                    || request.session().attribute("userValue") == null
-                    || request.session().attribute("userValue").equals("vacio")){
+            if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
                 response.redirect("/login");
             }
         });
 
         before("/likeComment/*", (request,response) ->{
-            //User user = UserServices.getInstance().find(((User)request.session().attribute("userValue")).getUsername());
-            //String username = ;
-            if(UserServices.getInstance().find(((User)request.session().attribute("userValue")).getUsername()) == null
-                    || request.session().attribute("userValue") == null
-                    || request.session().attribute("userValue").equals("vacio")){
+            if( request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
                 response.redirect("/login");
             }
         });
 
         before("/dislikeComment/*", (request,response) ->{
-            if(UserServices.getInstance().find(((User)request.session().attribute("userValue")).getUsername()) == null
-                    || request.session().attribute("userValue") == null
-                    || request.session().attribute("userValue").equals("vacio")){
+            if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
                 response.redirect("/login");
             }
         });

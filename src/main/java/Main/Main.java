@@ -184,34 +184,53 @@ public class Main {
         }, freemarkerEngine);
 
        get("/like/:id",(request,response) ->{
-           Article article = ArticleServices.getInstance().find(Long.parseLong(request.params("id")));
-           article.setLikenum(article.getLikenum() + 1);
-           ArticleServices.getInstance().edit(article);
-           response.redirect("/show/"+request.params("id"));
+           if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
+               response.redirect("/login");
+           }else {
+               Article article = ArticleServices.getInstance().find(Long.parseLong(request.params("id")));
+               article.setLikenum(article.getLikenum() + 1);
+               ArticleServices.getInstance().edit(article);
+               response.redirect("/show/" + request.params("id"));
+           }
            return null;
        },freemarkerEngine);
 
         get("/dislike/:id",(request,response) ->{
-            Article article = ArticleServices.getInstance().find(Long.parseLong(request.params("id")));
-            article.setDislike(article.getDislike() + 1);
-            ArticleServices.getInstance().edit(article);
-            response.redirect("/show/"+request.params("id"));
+            if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
+                response.redirect("/login");
+            }else {
+                Article article = ArticleServices.getInstance().find(Long.parseLong(request.params("id")));
+                article.setDislike(article.getDislike() + 1);
+                ArticleServices.getInstance().edit(article);
+                response.redirect("/show/"+request.params("id"));
+            }
+
             return null;
         },freemarkerEngine);
 
         get("/likeComment/:art_id/:id",(request,response) ->{
-            Comment comment = CommentServices.getInstance().find(Long.parseLong(request.params("id")));
-            comment.setLikenum(comment.getLikenum() + 1);
-            CommentServices.getInstance().edit(comment);
-            response.redirect("/show/"+request.params("art_id"));
+            if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
+                response.redirect("/login");
+            }else {
+                Comment comment = CommentServices.getInstance().find(Long.parseLong(request.params("id")));
+                comment.setLikenum(comment.getLikenum() + 1);
+                CommentServices.getInstance().edit(comment);
+                response.redirect("/show/"+request.params("art_id"));
+            }
+
             return null;
         },freemarkerEngine);
 
         get("/dislike/:art_id/:id",(request,response) ->{
-            Comment comment = CommentServices.getInstance().find(Long.parseLong(request.params("id")));
-            comment.setDislike(comment.getDislike() + 1);
-            CommentServices.getInstance().edit(comment);
-            response.redirect("/show/"+request.params("art_id"));
+            if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
+                response.redirect("/login");
+            }else{
+                Comment comment = CommentServices.getInstance().find(Long.parseLong(request.params("id")));
+                comment.setDislike(comment.getDislike() + 1);
+                CommentServices.getInstance().edit(comment);
+                response.redirect("/show/"+request.params("art_id"));
+            }
+
             return null;
         },freemarkerEngine);
 
@@ -336,5 +355,11 @@ public class Main {
             response.redirect("/show/" + request.params("article_id"));
             return null;
         }, freemarkerEngine);
+
+        notFound((request, response) -> {
+            //response.type("text/html");
+            response.redirect("/login");
+            return null;
+        });
     }
 }
