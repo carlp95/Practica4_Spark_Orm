@@ -1,12 +1,12 @@
 package Servicios;
 
 import Entidades.User;
-import org.jasypt.util.password.BasicPasswordEncryptor;
 import org.jasypt.util.text.BasicTextEncryptor;
 
 import java.util.Map;
 
-import static spark.Spark.*;
+import static spark.Spark.after;
+import static spark.Spark.before;
 
 public class Filters {
     public Filters() {
@@ -55,9 +55,10 @@ public class Filters {
         });
 
         before("/createArticle",(request, response) -> {
-            User user = UserServices.getInstance().find(request.session().attribute("userValue"));
-            if(UserServices.getInstance().find(request.session().attribute("userValue")) == null || request.session().attribute("userValue") == null
-                    || request.session().attribute("userValue").equals("vacio")){
+            String username = ((User) request.session().attribute("userValue")).getUsername();
+            User user = UserServices.getInstance().find(username);
+            if(UserServices.getInstance().find(username) == null || username == null
+                    || username.equals("vacio")){
                 response.redirect("/login");
             }
             if(!user.isAdministrator() && !user.isAuthor()){

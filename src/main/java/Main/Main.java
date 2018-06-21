@@ -19,7 +19,11 @@ import java.util.stream.Collectors;
 import static spark.Spark.*;
 
 public class Main {
-    private static int articlePage;
+    private static int articlePage = 1;
+
+    public static void insertArticles() {
+
+    }
 
     public static void main(String[] args) {
 
@@ -40,12 +44,11 @@ public class Main {
         //Applying all the filters
         new Filters().aplicarFiltros();
         get("/",(request,response) ->{
-            articlePage = 1;
-            response.redirect("/article/1");
+            response.redirect("/articles/page/1");
             return "Hi~";
         });
 
-        get("/article/:page", (request, response) -> {
+        get("/articles/page/:page", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
             attributes.put("title", "Banana Blog");
             attributes.put("userValue", request.session().attribute("userValue"));
@@ -193,7 +196,6 @@ public class Main {
                 user.setAuthor(false);
             }
             UserServices.getInstance().create(user);
-            //Dao.getInstance().insertarUsuario(user);
             response.redirect("/");
             return null;
 
