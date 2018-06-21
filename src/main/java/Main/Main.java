@@ -256,7 +256,7 @@ public class Main {
             }else if(request.queryParams("role").equals("author")){
                 user.setAuthor(true);
                 user.setAdministrator(false);
-            }else {
+            }else if(request.queryParams("role").equals("normal")){
                 user.setAdministrator(false);
                 user.setAuthor(false);
             }

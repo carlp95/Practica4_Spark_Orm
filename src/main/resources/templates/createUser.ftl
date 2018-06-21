@@ -27,7 +27,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="form-check col-md-4" style="margin: 0 auto;">
+                            <div class="form-check col-xl-3" style="margin: 0 auto;">
                                 <label class="form-check-label">
                                     <input class="form-check-input" name="role" value="administrator" type="radio">
                                     Administrador
@@ -35,6 +35,10 @@
                                 <label class="form-check-label">
                                     <input class="form-check-input" name="role" value="author" type="radio">
                                     Autor
+                                </label>
+                                <label class="form-check-label">
+                                    <input class="form-check-input" name="role" value="normal" type="radio">
+                                    Normal
                                 </label>
                             </div>
                         </div>
