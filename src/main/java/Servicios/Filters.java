@@ -48,11 +48,13 @@ public class Filters {
         });
 
         before("/createUser",(request, response) -> {
-            User user = UserServices.getInstance().find(request.session().attribute("userValue"));
-            if(UserServices.getInstance().find(request.session().attribute("userValue")) == null ||
-                    !user.isAdministrator() || request.session().attribute("userValue") == null
-                    || request.session().attribute("userValue").equals("vacio")){
+            if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
                 response.redirect("/error");
+            }else {
+                User user = UserServices.getInstance().find(request.session().attribute("userValue"));
+                if(!user.isAdministrator()){
+                    response.redirect("/error");
+                }
             }
         });
 
@@ -81,26 +83,29 @@ public class Filters {
         });
 
         before("/createArticle",(request, response) -> {
-            String username = ((User) request.session().attribute("userValue")).getUsername();
-            User user = UserServices.getInstance().find(username);
-            if(UserServices.getInstance().find(username) == null || username == null
-                    || username.equals("vacio")){
+            //String username = ((User) request.session().attribute("userValue")).getUsername();
+            if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
                 response.redirect("/login");
+            }else {
+                User user = UserServices.getInstance().find(((User)request.session().attribute("userValue")).getUsername());
+                if(!user.isAdministrator() && !user.isAuthor()){
+                    response.redirect("/error");
+                }
             }
-            if(!user.isAdministrator() && !user.isAuthor()){
-                response.redirect("/error");
-            }
+
         });
 
         before("/editArticle/*",(request, response) -> {
-            User user = UserServices.getInstance().find(request.session().attribute("userValue"));
             if(UserServices.getInstance().find(request.session().attribute("userValue")) == null || request.session().attribute("userValue") == null
                     || request.session().attribute("userValue").equals("vacio")){
                 response.redirect("/login");
+            }else {
+                User user = UserServices.getInstance().find(request.session().attribute("userValue"));
+                if(!user.isAdministrator() && !user.isAuthor()){
+                    response.redirect("/error");
+                }
             }
-            if(!user.isAdministrator() && !user.isAuthor()){
-                response.redirect("/error");
-            }
+
         });
     }
 
