@@ -187,6 +187,13 @@ public class Main {
             return null;
         }, freemarkerEngine);
 
+       post("/like/:id",(request,response) ->{
+           Article article = ArticleServices.getInstance().find(Long.parseLong(request.params("id")));
+           article.setLikenum(article.getLikenum() + 1);
+           ArticleServices.getInstance().edit(article);
+           return null;
+       },freemarkerEngine);
+
        get("/createUser", (request,response) ->{
             Map<String, Object> atributes = new HashMap<>();
             atributes.put("title","Crear Usuario");
