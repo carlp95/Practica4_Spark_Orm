@@ -221,7 +221,7 @@ public class Main {
             return null;
         },freemarkerEngine);
 
-        get("/dislike/:art_id/:id",(request,response) ->{
+        get("/dislikeComment/:art_id/:id",(request,response) ->{
             if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
                 response.redirect("/login");
             }else{
