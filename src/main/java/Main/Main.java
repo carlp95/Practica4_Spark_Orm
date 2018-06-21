@@ -121,6 +121,7 @@ public class Main {
         get("/logout",(request,response) ->{
             Session activeSession = request.session();
             activeSession.invalidate();
+            response.removeCookie("cookie");
             response.redirect("/");
 
             return null;
