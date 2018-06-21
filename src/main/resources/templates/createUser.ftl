@@ -1,7 +1,7 @@
 <#import "general.ftl" as gen>
 
 <@gen.base user = userValue>
-<#if userValue.administrator>
+<#--<#if userValue.administrator>-->
     <div class="container" align="center">
         <div class="col-lg-5">
             <div class="card border-primary">
@@ -44,8 +44,8 @@
             </div>
         </div>
     </div>
-<#else >
+<#--<#else >
     <p class="text-danger">No tiene permiso para crear usuarios, contacte al administrador para crear un usuario.</p>
-</#if>
+</#if>-->
 
 </@gen.base>

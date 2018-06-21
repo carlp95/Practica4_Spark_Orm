@@ -27,10 +27,21 @@ public class Filters {
             }
         });
 
-        after("/createUser/",(request, response) -> {
-            if(!((User)request.session().attribute("userValue")).isAdministrator() || request.session().attribute("userValue") == null
+        before("/createUser",(request, response) -> {
+            User user = UserServices.getInstance().find(request.session().attribute("userValue"));
+            if(UserServices.getInstance().find(request.session().attribute("userValue")) == null ||
+                    !user.isAdministrator() || request.session().attribute("userValue") == null
                     || request.session().attribute("userValue").equals("vacio")){
-                response.redirect("/error",404);
+                response.redirect("/error");
+            }
+        });
+
+        before("/createArticle",(request, response) -> {
+            User user = UserServices.getInstance().find(request.session().attribute("userValue"));
+            if(UserServices.getInstance().find(request.session().attribute("userValue")) == null ||
+                    !user.isAdministrator() || !user.isAuthor() || request.session().attribute("userValue") == null
+                    || request.session().attribute("userValue").equals("vacio")){
+                response.redirect("/login");
             }
         });
     }

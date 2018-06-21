@@ -5,8 +5,10 @@ import Entidades.Comment;
 import Entidades.Tag;
 import Entidades.User;
 import Servicios.*;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import freemarker.template.Configuration;
 import org.jasypt.util.password.BasicPasswordEncryptor;
+import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.jasypt.util.text.BasicTextEncryptor;
 import spark.ModelAndView;
 import spark.Session;
@@ -143,13 +145,6 @@ public class Main {
             response.redirect("/");
 
             return null;
-        },freemarkerEngine);
-
-        get("/error", (request,response) -> {
-            Map<String, Object> model = new HashMap<>();
-            model.put("titulo","Error");
-            model.put("userValue", request.session().attribute("userValue"));
-            return new ModelAndView(model,"error.ftl");
         },freemarkerEngine);
 
         get("/show/:id",(request, response) ->{
@@ -318,5 +313,16 @@ public class Main {
             response.redirect("/show/" + article.getId());
             return null;
         });
+
+        get("/error",(request, response) -> {
+            Map<String, Object> model = new HashMap<>();
+            model.put("title","404");
+            model.put("userValue", request.session().attribute("userValue"));
+            return new ModelAndView(model,"error.ftl");
+        },freemarkerEngine);
+        /*notFound((request, response) -> {
+            response.type("text/html");
+            return new ModelAndView(null,"error.ftl");
+        });*/
     }
 }
