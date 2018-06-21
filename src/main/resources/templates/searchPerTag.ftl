@@ -23,7 +23,7 @@
                             <#if searchTag == e.tagName>
                                 <span class="badge badge-success">${ e.tagName }</span>
                             <#else>
-                                <a href="/tag/${ e.tagName }" class="badge badge-secondary">${ e.tagName }</a>
+                                <a href="/tag/${ e.tagName }" class="badge badge-primary">${ e.tagName }</a>
                             </#if>
                         <#else>
                             <p class="text-danger">No hay etiquetas relacionada a este Artículo</p>
