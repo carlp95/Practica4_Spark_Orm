@@ -1,3 +1,4 @@
+<#--noinspection HtmlUnknownTarget-->
 <#import "general.ftl" as gen>
 
 <@gen.base user = userValue>

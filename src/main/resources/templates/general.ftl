@@ -1,3 +1,4 @@
+<#--noinspection ALL,HtmlUnknownTarget,ALL,HtmlUnknownTarget-->
 <#macro base user>
 
 <!DOCTYPE html>
@@ -12,7 +13,7 @@
 <body>
 
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="/">Banana Blog</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation" style="">
             <span class="navbar-toggler-icon"></span>
@@ -54,10 +55,28 @@
         <#nested>
     </div>
 
+    <nav aria-label="Navegacion entre los resultados">
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <a class="page-link" href="#" tabindex="-1">Previous</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+    </nav>
+
     <#--footer-->
     <footer class="footer">
         <#include "footer.ftl">
     </footer>
+
+    <#--<script-->
+            <#--src="https://code.jquery.com/jquery-3.3.1.min.js"-->
+            <#--integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="-->
+            <#--crossorigin="anonymous"></script>-->
+
+    <#--<script src="/js/like-dislike.js"></script>-->
 
 </body>
 </html>

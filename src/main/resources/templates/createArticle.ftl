@@ -1,8 +1,9 @@
+<#--noinspection HtmlUnknownTarget-->
 <#import "general.ftl" as gen>
 
 <@gen.base user = userValue>
 
-    <div class="card mx-auto my-auto" style="width: 750px">
+    <div class="card mx-auto" style="width: 750px">
         <div class="card-header">
             <h2>Nuevo Artículo</h2>
         </div>

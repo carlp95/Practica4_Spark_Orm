@@ -2,7 +2,7 @@
 
 <@gen.base user = userValue>
 <div class="container" >
-    <div class="card mb-3">
+    <div class="card">
         <div class="card-header">
             <h3>${article.title}</h3>
             <#if userValue != "vacio">
@@ -27,19 +27,31 @@
                     <p class="text-danger">No hay etiquetas relacionada a este Artículo</p>
                 <#else >
                     <#list tags as e>
-                        <span class="badge badge-primary">${ e.tagName }</span>
+                        <a class="badge badge-primary" href="/tag/${ e.tagName }">${ e.tagName }</a>
                     </#list>
                 </#if>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-sm-2">
-                        <a href="/like/${article.id}"><button class="btn btn-outline-info" data-toggle="tooltip" data-placement="bottom" title="Me gusta" data-original-title="Me gusta"><i class="fa fa-thumbs-up">  Me gusta</i></button></a>
-                        <span class="badge badge-dark">${article.likenum}</span>
+                        <form action="/like/${article.id}" method="get">
+                            <button class="btn btn-outline-info" data-toggle="tooltip" data-placement="bottom"
+                                    title="Me gusta" data-original-title="Me gusta" type="submit"
+                                    value="like">
+                                <i class="fa fa-thumbs-up">  Me gusta</i>
+                            </button>
+                        </form>
+                        <span class="badge badge-dark">0</span>
                     </div>
                     <div class="col-sm-2">
-                        <a href="/dislike/${article.id}"><button class="btn btn-outline-danger" data-toggle="tooltip" data-placement="bottom" title="No me gusta" data-original-title="No me gusta"><i class="fa fa-thumbs-down">  No me gusta</i></button></a>
-                        <span class="badge badge-dark">${article.dislike}</span>
+                        <form action="/dislike/${article.id}" method="get">
+                            <button class="btn btn-outline-danger" data-toggle="tooltip" data-placement="bottom"
+                                    title="No me gusta" data-original-title="No me gusta" type="submit"
+                                    value="dislike">
+                                <i class="fa fa-thumbs-down">  No me gusta</i>
+                            </button>
+                        </form>
+                        <span class="badge badge-dark">0</span>
                     </div>
                 </div>
 
@@ -50,18 +62,22 @@
             </div>
         </div>
     </div>
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">Comentarios</h4>
-                <h6 class="card-subtitle mb-2 text-muted">Comenta este Post</h6>
-                <form action="createComment/${article.id}" method="post">
-                    <div class="form-group">
-                        <textarea class="form-control" name="comment" rows="6" placeholder="Escribe tu comentario aquí"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-success"><i class="fa fa-commenting"> <strong>Comentar</strong></i></button>
-                </form>
-            </div>
+
+    <#-- Formulario -->
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Comentarios</h4>
+            <h6 class="card-subtitle mb-2 text-muted">Comenta este Post</h6>
+            <form action="createComment/${article.id}" method="post">
+                <div class="form-group">
+                    <textarea class="form-control" name="comment" rows="6" placeholder="Escribe tu comentario aquí"></textarea>
+                </div>
+                <button type="submit" class="btn btn-success"><i class="fa fa-commenting"> <strong>Comentar</strong></i></button>
+            </form>
         </div>
+    </div>
+
+    <#-- Comentarios -->
     <#if comments?size == 0>
         <div class="card">
             <div class="card-body">

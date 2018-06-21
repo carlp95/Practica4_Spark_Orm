@@ -1,2 +1,2 @@
-<p align="center">©Copyright 2018 Estudiantes</p>
+<div align="center">©Copyright 2018 Estudiantes</div>
 

@@ -183,6 +183,8 @@ public class Main {
             return null;
         }, freemarkerEngine);
 
+
+       // Ar
        get("/like/:id",(request,response) ->{
            if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
                response.redirect("/login");
@@ -354,6 +356,18 @@ public class Main {
 
             response.redirect("/show/" + request.params("article_id"));
             return null;
+        }, freemarkerEngine);
+
+        get("/tag/:tagName", (request, response) -> {
+            Map<String, Object> model = new HashMap<>();
+
+            model.put("title", "Buscando Artículos por tag");
+            model.put("userValue", request.session().attribute("userValue"));
+            model.put("searchTag", request.params("tagName"));
+            model.put("articlesFiltered",
+                    ArticleServices.getInstance().findAllWithTag(request.params("tagName")));
+
+            return new ModelAndView(model, "searchPerTag.ftl");
         }, freemarkerEngine);
 
         notFound((request, response) -> {

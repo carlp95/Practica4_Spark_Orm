@@ -1,10 +1,12 @@
 package Servicios;
 
 import Entidades.Article;
+import Entidades.Tag;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaQuery;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ArticleServices extends Dao<Article> {
@@ -38,8 +40,28 @@ public class ArticleServices extends Dao<Article> {
     public List<Article> findAll() {
         EntityManager em = getEntityManager();
         try{
-            TypedQuery<Article> query= em.createQuery("select distinct a from Article a join fetch a.tagList", Article.class);
+            TypedQuery<Article> query;
+            query = em.createQuery("select distinct a from Article a join fetch a.tagList", Article.class);
             return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<Article> findAllWithTag(String tagName) {
+        EntityManager em = getEntityManager();
+        try {
+            Tag tag = TagServices.getInstance().findByTagName(tagName);
+
+            Query query = em.createNativeQuery("select ARTICLELIST_ID from ARTICLE_TAG where TAGLIST_ID = "+tag.getId());
+
+            List<Article> articles = new ArrayList<>();
+
+            for (Object elm : query.getResultList()) {
+                articles.add(ArticleServices.getInstance().find(Long.parseLong(elm.toString())));
+            }
+
+            return articles;
         } finally {
             em.close();
         }
