@@ -1,0 +1,31 @@
+/*footer {*/
+    /*position:absolute;*/
+    /*bottom:0;*/
+    /*width:100%;*/
+    /*height:60px;*/
+    /*background-color: #313131;*/
+/*}*/
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #313131;
+    color: white;
+    text-align: center;
+    height: 60px;
+}
+
+/* For an more sophisticate tags editing in the future... or not*/
+.tag {
+
+}
+
+.tag p {
+
+}
+
+.tag button {
+
+}

@@ -1,6 +1,8 @@
 package Servicios;
 
-import Entidades.Tag;   
+import Entidades.Tag;
+
+import javax.persistence.EntityManager;
 
 public class TagServices extends Dao<Tag> {
     private static TagServices instance;
@@ -14,5 +16,20 @@ public class TagServices extends Dao<Tag> {
             instance = new TagServices();
         }
         return instance;
+    }
+
+    public void deleteAll() {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.createQuery("delete Tag").executeUpdate();
+            em.getTransaction().commit();
+
+        } catch (Exception ex) {
+            em.getTransaction().rollback();
+            throw ex;
+        } finally {
+            em.close();
+        }
     }
 }

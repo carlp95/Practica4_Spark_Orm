@@ -9,6 +9,10 @@
                 <a href="/editArticle/${ article.id }">
                     <button class="btn btn-primary"><i class="fa fa-edit"></i> Editar</button>
                 </a>
+
+                <a href="/deleteArticle/${ article.id }">
+                    <button class="btn btn-danger"><i class="fa fa-trash"></i> Eliminar</button>
+                </a>
             </#if>
         </div>
         <div class="card-body">

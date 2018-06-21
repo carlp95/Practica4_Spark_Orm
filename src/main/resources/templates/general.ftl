@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-    <#--<#include "navbar.ftl">-->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5">
         <a class="navbar-brand" href="/">Banana Blog</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation" style="">
@@ -35,7 +34,10 @@
 
                 </ul>
             </div>
-            <a href="/logout"><button class="btn btn-secundary">${user.username}!, Cerrar Sesión</button></a>
+            <div>
+                <div class="nav-link" style="float:left; font-style: italic">¡Hey, ${ user.username?cap_first }! What's up?</div>
+                <a href="/logout"><button class="btn btn-secundary">Cerrar Sesión</button></a>
+            </div>
         <#else >
             <div class="collapse navbar-collapse" id="navbarColor02">
 
@@ -46,12 +48,14 @@
     </nav>
 
     <#--contenido-->
-    <#nested >
+
+    <#nested>
 
     <#--footer-->
-<footer class="footer">
-    <#include "footer.ftl">
-</footer>
+    <div class="footer">
+        <#include "footer.ftl">
+    </div>
+
 </body>
 </html>
 

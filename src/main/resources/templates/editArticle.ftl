@@ -17,9 +17,7 @@
                 <div class="form-group">
                     <label for="artBody">Cuerpo:</label>
                     <textarea id="artBody" class="form-control" rows="10" name="artBody"
-                              placeholder="Escribe el cuerpo de tu articulo aqui">
-                        ${ article.body }
-                    </textarea>
+                              placeholder="Escribe el cuerpo de tu articulo aqui">${ article.body }</textarea>
                 </div>
 
                 <div class="form-group">
