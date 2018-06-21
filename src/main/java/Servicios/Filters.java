@@ -19,7 +19,7 @@ public class Filters {
             }
         });
 
-        before("/",(request,response) ->{
+        before("/*",(request,response) ->{
             Map<String, String> cookies = request.cookies();
 
             for(String key : cookies.keySet()){

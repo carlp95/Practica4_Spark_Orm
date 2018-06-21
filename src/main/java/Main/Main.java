@@ -5,6 +5,8 @@ import Entidades.Comment;
 import Entidades.Tag;
 import Entidades.User;
 import Servicios.*;
+import com.thedeanda.lorem.Lorem;
+import com.thedeanda.lorem.LoremIpsum;
 import freemarker.template.Configuration;
 import org.jasypt.util.password.BasicPasswordEncryptor;
 import org.jasypt.util.text.BasicTextEncryptor;
@@ -21,22 +23,64 @@ import static spark.Spark.*;
 public class Main {
     private static int articlePage = 1;
 
-    public static void insertArticles() {
-//        List<Article> articulos;
-//        Lorem lorem = LoremIpsum.getInstance();
-//
-//        User user = new User()
-//
-//        for (Article articulo : articulos) {
-//            articulo = new Article(
-//                    lorem.getTitle(5, 20),
-//                    lorem.getParagraphs(4, 5),
-//
-//
-//            );
-//        }
+    /*public static void insertArticles() {
+        List<Article> articulos = new ArrayList<>();
+        Lorem lorem = LoremIpsum.getInstance();
 
-    }
+        //User user = new User();
+
+        List<Tag> tags;
+
+        tags.add(new Tag("1"));
+        tags.add(new Tag("2"));
+        tags.add(new Tag("3"));
+        tags.add(new Tag("4"));
+        tags.add(new Tag("5"));
+        tags.add(new Tag("6"));
+        tags.add(new Tag("7"));
+
+        for(Tag t : tags){
+            TagServices.getInstance().create(t);
+        }
+
+        articulos.add(new Article(
+                lorem.getTitle(5, 20),
+                lorem.getParagraphs(4, 5),
+                UserServices.getInstance().find("admin"),
+                new Date, TagServices.getInstance().findAll()
+        ));
+        ArticleServices.getInstance().create(new Article(
+                lorem.getTitle(5, 20),
+                lorem.getParagraphs(4, 5),
+                UserServices.getInstance().find("admin"),
+                new Date, TagServices.getInstance().findAll()
+        ));
+        articulos.add(new Article(
+                lorem.getTitle(5, 20),
+                lorem.getParagraphs(4, 5),
+                UserServices.getInstance().find("admin"),
+                new Date, TagServices.getInstance().findAll()
+        ));
+
+        articulos.add(new Article(
+                lorem.getTitle(5, 20),
+                lorem.getParagraphs(4, 5),
+                UserServices.getInstance().find("admin"),
+                new Date, TagServices.getInstance().findAll()
+        ));
+
+        articulos.add(new Article(
+                lorem.getTitle(5, 20),
+                lorem.getParagraphs(4, 5),
+                UserServices.getInstance().find("admin"),
+                new Date, TagServices.getInstance().findAll()
+        ));
+
+        *//*for (Article articulo : articulos) {
+
+        }*//*
+
+    }*/
 
     public static void main(String[] args) {
 
