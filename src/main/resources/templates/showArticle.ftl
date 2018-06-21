@@ -5,11 +5,15 @@
     <div class="card mb-3">
         <div class="card-header">
             <h3>${article.title}</h3>
-            <#--<#if userValue.username == article.author.username>
+            <#if userValue.username == article.author.username>
                 <a href="/editArticle/${ article.id }">
                     <button class="btn btn-primary"><i class="fa fa-edit"></i> Editar</button>
                 </a>
-            </#if>-->
+
+                <a href="/deleteArticle/${ article.id }">
+                    <button class="btn btn-danger"><i class="fa fa-trash"></i> Eliminar</button>
+                </a>
+            </#if>
         </div>
         <div class="card-body">
             <div class="">

@@ -4,7 +4,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 public class Article implements Serializable {
@@ -29,7 +28,7 @@ public class Article implements Serializable {
     @ManyToMany()
     private List<Tag> tagList;
 
-    @OneToMany(mappedBy = "article", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "article", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Comment> commentList;
 
     public Article() { }

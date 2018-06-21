@@ -5,63 +5,29 @@ import Entidades.Comment;
 import Entidades.Tag;
 import Entidades.User;
 import Servicios.*;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import freemarker.template.Configuration;
 import org.jasypt.util.password.BasicPasswordEncryptor;
-import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.jasypt.util.text.BasicTextEncryptor;
 import spark.ModelAndView;
 import spark.Session;
 import spark.template.freemarker.FreeMarkerEngine;
-import static spark.Spark.*;
 
+import javax.persistence.TypedQuery;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static spark.Spark.staticFileLocation;
+import static spark.Spark.*;
 
 public class Main {
+    private static int articlePage = 1;
+
+    public static void insertArticles() {
+
+    }
+
     public static void main(String[] args) {
 
         staticFileLocation("public");
-
-        /*User user = new User("admin", "jefito", "admin123", true);
-        User user2 = new User("tugolfa123", "Marielys", "yoshi", false);
-
-        Tag tag1 = new Tag("que trabajo");
-        Tag tag2 = new Tag("una vida");
-        Set<Tag> tags = new HashSet<>();
-        tags.add(tag1);
-        tags.add(tag2);
-
-        Article article = new Article("Titulo de prueba", "Nada en especial", user, new Date(), tags);
-        Article article2 = new Article("El segundo", "Nada en especial", user, new Date(), tags);
-
-        Comment comment1 = new Comment("Primero en comentar!", user, article);
-        Comment comment2 = new Comment("Segundo en comentar!", user2, article);
-        List<Comment> comments = new ArrayList<>();
-        comments.add(comment1);
-        comments.add(comment2);
-
-        article.setCommentList(comments);
-
-        UserServices.getInstance().create(user);
-        for (Tag tag : tags) {
-            TagServices.getInstance().create(tag);
-        }
-        ArticleServices.getInstance().create(article);
-        for (Comment comment : comments) {
-            CommentServices.getInstance().create(comment);
-        }
-
-        user.setName("Pedro");
-        UserServices.getInstance().edit(user);
-
-        article.setTitle("Nuevo titulo de prueba");
-        ArticleServices.getInstance().edit(article);
-
-        List<Tag> AllTags = TagServices.getInstance().findAll();
-        System.out.println(AllTags);*/
 
         Configuration configuration = new Configuration(Configuration.VERSION_2_3_26);
         configuration.setClassForTemplateLoading(Main.class, "/templates");
@@ -74,17 +40,33 @@ public class Main {
             User user = new User("admin","Administrador",encryptor.encryptPassword("admin123"),true, true);
             UserServices.getInstance().create(user);
         }
-        //Aplicando todos los filtros
+
+        //Applying all the filters
         new Filters().aplicarFiltros();
         get("/",(request,response) ->{
+            response.redirect("/articles/page/1");
+            return "Hi~";
+        });
+
+        get("/articles/page/:page", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
             attributes.put("title", "Banana Blog");
-            attributes.put("articles", ArticleServices.getInstance().findAll());
             attributes.put("userValue", request.session().attribute("userValue"));
 
+            TypedQuery<Article> query = ArticleServices.getInstance()
+                    .getEntityManager()
+                    .createQuery("from Article a order by a.date desc", Article.class);
+
+            int endLimit= articlePage * 5;
+            int startLimit = endLimit - 5;
+
+            query.setFirstResult(startLimit);
+            query.setMaxResults(endLimit);
+
+            attributes.put("articles", query.getResultList());
 
             return new ModelAndView(attributes,"index.ftl");
-        },freemarkerEngine);
+        }, freemarkerEngine);
 
         get("/login",(request, response) ->{
             Map<String, Object> atributes = new HashMap<>();
@@ -221,7 +203,6 @@ public class Main {
                 user.setAuthor(false);
             }
             UserServices.getInstance().create(user);
-            //Dao.getInstance().insertarUsuario(user);
             response.redirect("/");
             return null;
 
@@ -229,6 +210,7 @@ public class Main {
 
        get("/createArticle", (request, response) -> {
             Map<String, Object> model = new HashMap<>();
+
             model.put("title", "Crear Articulo");
             model.put("userValue", request.session().attribute("userValue"));
 
@@ -237,38 +219,28 @@ public class Main {
 
         post("/createArticle", (request, response) -> {
 
-            //Articulo articulo = new Articulo();
             Article article = new Article();
 
             article.setTitle(request.queryParams("title"));
             article.setBody(request.queryParams("artBody"));
             article.setAuthor(request.session().attribute("userValue"));
             article.setDate(new Date());
+
             List<Tag> tags = new ArrayList<>();
-            for(String tag : request.queryParams("tag").split(",")){
-                tags.add(new Tag(tag));
+
+            // Add the tags fetched from the view to the Article object
+            for(String tagName : request.queryParams("tag").split(",")){
+                tags.add(new Tag(tagName));
             }
-            for(Tag tag :tags){
+
+            // Persist the tags to the database
+            for(Tag tag :tags) {
                 TagServices.getInstance().create(tag);
             }
+
             article.setTagList(tags);
-            /*articulo.setTitulo(
-                    request.queryParams("titulo"));
-
-            articulo.setCuerpo(
-                    request.queryParams("cuerpo"));
-
-            articulo.setAutor((( Usuario ) request.session().attribute("usuarioValue")).getUsername());
-
-            articulo.setFecha(new Date());
-
-            articulo.setListaEtiquetas(
-                    request.queryParams("etiquetas").split(","));*/
 
             ArticleServices.getInstance().create(article);
-
-
-            //Dao.getInstance().insertarArticulo(articulo);
 
             response.redirect("/");
             return null;
@@ -276,61 +248,54 @@ public class Main {
 
        get("/editArticle/:article_id", (request, response) -> {
             Map<String, Object> model = new HashMap<>();
-            /*Articulo articulo =
-                    Dao.getInstance()
-                            .getArticulosPorId(Long.parseLong(request.params("article_id")));
-*/
+
             Article article = ArticleServices.getInstance().find(Long.parseLong(request.params("article_id")));
 
             model.put("title", "Editar Artículo");
             model.put("userValue", request.session().attribute("userValue"));
 
             model.put("article", article);
-            model.put("tagsChain",article.getTagList().stream().map(Tag::getTagName).collect(Collectors.joining(", ")));
-                    /*articulo.getListaEtiquetas().stream()
-                            .map(Etiqueta::getEtiqueta)
-                            .collect(Collectors.joining(", ")));
-*/
+            model.put("tagsChain",article.getTagList()
+                    .stream()
+                    .map(Tag::getTagName)
+                    .collect(Collectors.joining(", ")));
+
             return new ModelAndView(model, "editArticle.ftl");
         }, freemarkerEngine);
 
-        post("/editArticle/:articulo_id", (request, response) -> {
-            /*Articulo articulo =
-                    Dao.getInstance()
-                            .getArticulosPorId(Long.parseLong(request.params("articulo_id")));*/
-            Article article = ArticleServices.getInstance().find(Long.parseLong(request.params("articulo_id")));
+        post("/editArticle/:article_id", (request, response) -> {
+            Article article = ArticleServices.getInstance().find(Long.parseLong(request.params("article_id")));
             article.setTitle(request.queryParams("title"));
             article.setBody(request.queryParams("artBody"));
             article.setDate(new Date());
 
             List<Tag> tags = new ArrayList<>();
-            for(String tag : request.queryParams("tag").split(",")){
-                tags.add(new Tag(tag));
+
+            // Add the tags fetched from the view to the Article object
+            for(String tagName : request.queryParams("tags").split(",")){
+                tags.add(new Tag(tagName));
             }
+
+            TagServices.getInstance().deleteAll();
+
+            // Edit the tag list
+            for(Tag tag :tags) {
+                TagServices.getInstance().create(tag);
+            }
+
             article.setTagList(tags);
 
             ArticleServices.getInstance().edit(article);
-            /*
-            articulo.setTitulo(request.queryParams("titulo"));
-            articulo.setCuerpo(request.queryParams("cuerpo"));
-            articulo.setFecha(new Date());
-            //TODO - Arreglar el asunto de las etiquetas
-
-            Dao.getInstance().actualizarArticulo(articulo);*/
 
             response.redirect("/show/" + article.getId());
             return null;
         });
 
-        get("/error",(request, response) -> {
-            Map<String, Object> model = new HashMap<>();
-            model.put("title","404");
-            model.put("userValue", request.session().attribute("userValue"));
-            return new ModelAndView(model,"error.ftl");
-        },freemarkerEngine);
-        /*notFound((request, response) -> {
-            response.type("text/html");
-            return new ModelAndView(null,"error.ftl");
-        });*/
+        get("/deleteArticle/:article_id", (request, response) -> {
+            ArticleServices.getInstance().delete(Long.parseLong(request.params("article_id")));
+
+            response.redirect("/show/" + request.params("article_id"));
+            return null;
+        }, freemarkerEngine);
     }
 }
