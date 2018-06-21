@@ -20,4 +20,5 @@ dependencies {
     //Librerias de Hibernate
     compile 'org.hibernate:hibernate-core:5.1.0.Final'
     compile 'org.hibernate:hibernate-entitymanager:5.1.0.Final'
+    compile 'com.thedeanda:lorem:2.1'
 }
