@@ -33,11 +33,11 @@
                 <div class="row">
                     <div class="col-sm-2">
                         <a href="/like/${article.id}"><button class="btn btn-outline-info" data-toggle="tooltip" data-placement="bottom" title="Me gusta" data-original-title="Me gusta"><i class="fa fa-thumbs-up">  Me gusta</i></button></a>
-                        <span class="badge badge-dark">1</span>
+                        <span class="badge badge-dark">${article.likenum}</span>
                     </div>
                     <div class="col-sm-2">
                         <a href="/dislike/${article.id}"><button class="btn btn-outline-danger" data-toggle="tooltip" data-placement="bottom" title="No me gusta" data-original-title="No me gusta"><i class="fa fa-thumbs-down">  No me gusta</i></button></a>
-                        <span class="badge badge-dark">0</span>
+                        <span class="badge badge-dark">${article.dislike}</span>
                     </div>
                 </div>
 
@@ -62,7 +62,7 @@
         </div>
     <#if comments?size == 0>
         <div class="card">
-            <div class="-body">
+            <div class="card-body">
                     <div class="col-xl-5">
                         <h4 class="card-title">Comentarios sobre este Post</h4>
                         <p class="text-danger">No hay comentarios para este Artículo :(</p>
@@ -71,11 +71,22 @@
         </div>
     <#else >
         <div class="card">
-            <div class="-body">
+            <div class="card-body">
                     <div class="col-xl-5">
                         <h4 class="card-title">Comentarios sobre este Post</h4>
                         <#list comments?reverse as com>
-                            <p><strong>${com.author.username}:</strong> ${com.body}</p>
+                                <p><strong>${com.author.username}:</strong> ${com.body}</p>
+                            <div class="row">
+                                <div class="col-xl-5">
+                                    <a href="/likeComment/${com.article.id}/${com.id}"><button class="btn btn-outline-info" data-toggle="tooltip" data-placement="bottom" title="Me gusta" data-original-title="Me gusta"><i class="fa fa-thumbs-up">  Me gusta</i></button></a>
+                                    <span class="badge badge-dark">${com.likenum}</span>
+                                </div>
+                                <div class="col-xl-5">
+                                    <a href="/dislikeComment/${com.article.id}/${com.id}"><button class="btn btn-outline-danger" data-toggle="tooltip" data-placement="bottom" title="No me gusta" data-original-title="No me gusta"><i class="fa fa-thumbs-down">  No me gusta</i></button></a>
+                                    <span class="badge badge-dark">${com.dislike}</span>
+                                </div>
+                            </div>
+
                         </#list>
 
                     </div>

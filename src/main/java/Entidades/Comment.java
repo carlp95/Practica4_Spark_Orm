@@ -14,6 +14,10 @@ public class Comment implements Serializable {
 
     private String body;
 
+    private int likenum;
+
+    private int dislike;
+
     @ManyToOne
     private User author;
 
@@ -58,5 +62,21 @@ public class Comment implements Serializable {
 
     public void setArticle(Article article) {
         this.article = article;
+    }
+
+    public int getLikenum() {
+        return likenum;
+    }
+
+    public void setLikenum(int likenum) {
+        this.likenum = likenum;
+    }
+
+    public int getDislike() {
+        return dislike;
+    }
+
+    public void setDislike(int dislike) {
+        this.dislike = dislike;
     }
 }
