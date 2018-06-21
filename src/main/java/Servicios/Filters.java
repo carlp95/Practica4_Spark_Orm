@@ -49,7 +49,7 @@ public class Filters {
             if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
                 response.redirect("/error");
             }else {
-                User user = UserServices.getInstance().find(request.session().attribute("userValue"));
+                User user = UserServices.getInstance().find(((User)request.session().attribute("userValue")).getUsername());
                 if(!user.isAdministrator()){
                     response.redirect("/error");
                 }
