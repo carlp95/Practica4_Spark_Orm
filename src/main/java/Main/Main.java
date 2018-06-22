@@ -115,12 +115,12 @@ public class Main {
                     .getEntityManager()
                     .createQuery("from Article a order by a.date desc", Article.class);
 
-            int endLimit= articlePage * 5;
+            int endLimit= Integer.parseInt(request.params("page")) * 5;
             int startLimit = endLimit - 5;
 
             query.setFirstResult(startLimit);
             query.setMaxResults(endLimit);
-
+            attributes.put("page", Integer.parseInt(request.params("page")));
             attributes.put("articles", query.getResultList());
 
             return new ModelAndView(attributes,"index.ftl");

@@ -27,5 +27,16 @@
         </ul>
     </#list>
 
+<nav aria-label="Navegacion entre los resultados">
+    <ul class="pagination justify-content-center">
+        <li class="page-item">
+            <a class="page-link" href="/articles/page/${page - 1}" tabindex="-1"><i class="fa fa-angle-double-left"> Anterior</i></a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="/articles/page/${page +1}">Siguiente <i class="fa fa-angle-double-right"></i></a>
+        </li>
+    </ul>
+</nav>
+
 </@gen.base>
 
