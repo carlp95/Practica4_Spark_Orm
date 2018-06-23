@@ -1,12 +1,7 @@
 package Main;
 
-import Entidades.Article;
-import Entidades.Comment;
-import Entidades.Tag;
-import Entidades.User;
+import Entidades.*;
 import Servicios.*;
-import com.thedeanda.lorem.Lorem;
-import com.thedeanda.lorem.LoremIpsum;
 import freemarker.template.Configuration;
 import org.jasypt.util.password.BasicPasswordEncryptor;
 import org.jasypt.util.text.BasicTextEncryptor;
@@ -21,66 +16,35 @@ import java.util.stream.Collectors;
 import static spark.Spark.*;
 
 public class Main {
-    private static int articlePage = 1;
-
-    /*public static void insertArticles() {
-        List<Article> articulos = new ArrayList<>();
-        Lorem lorem = LoremIpsum.getInstance();
-
-        //User user = new User();
-
-        List<Tag> tags;
-
-        tags.add(new Tag("1"));
-        tags.add(new Tag("2"));
-        tags.add(new Tag("3"));
-        tags.add(new Tag("4"));
-        tags.add(new Tag("5"));
-        tags.add(new Tag("6"));
-        tags.add(new Tag("7"));
-
-        for(Tag t : tags){
-            TagServices.getInstance().create(t);
-        }
-
-        articulos.add(new Article(
-                lorem.getTitle(5, 20),
-                lorem.getParagraphs(4, 5),
-                UserServices.getInstance().find("admin"),
-                new Date, TagServices.getInstance().findAll()
-        ));
-        ArticleServices.getInstance().create(new Article(
-                lorem.getTitle(5, 20),
-                lorem.getParagraphs(4, 5),
-                UserServices.getInstance().find("admin"),
-                new Date, TagServices.getInstance().findAll()
-        ));
-        articulos.add(new Article(
-                lorem.getTitle(5, 20),
-                lorem.getParagraphs(4, 5),
-                UserServices.getInstance().find("admin"),
-                new Date, TagServices.getInstance().findAll()
-        ));
-
-        articulos.add(new Article(
-                lorem.getTitle(5, 20),
-                lorem.getParagraphs(4, 5),
-                UserServices.getInstance().find("admin"),
-                new Date, TagServices.getInstance().findAll()
-        ));
-
-        articulos.add(new Article(
-                lorem.getTitle(5, 20),
-                lorem.getParagraphs(4, 5),
-                UserServices.getInstance().find("admin"),
-                new Date, TagServices.getInstance().findAll()
-        ));
-
-        *//*for (Article articulo : articulos) {
-
-        }*//*
-
-    }*/
+//    public static void insertArticles(int numArticles) {
+//
+//        Lorem lorem = LoremIpsum.getInstance();
+//        Random rand = new Random();
+//        List<String> posibleTags = new ArrayList<>();
+//        Collections.addAll(posibleTags, "food", "");
+//
+//        BasicPasswordEncryptor basicPasswordEncryptor = new BasicPasswordEncryptor();
+//        User author = new User("darkwiz", "Nelson Daniel", basicPasswordEncryptor.encryptPassword("123"), false, true);
+//        UserServices.getInstance().create(author);
+//
+//
+//        for (int i = 0; i < numArticles; i++) {
+//            List<Tag> tags = new ArrayList<>();
+//            for (int j = 0; j < rand.nextInt(5); j++) {
+//                Tag tag = new Tag(lorem.getCountry());
+//                tags.add(tag);
+//                TagServices.getInstance().create(tag);
+//            }
+//
+//            ArticleServices.getInstance().create(new Article(
+//                    lorem.getTitle(5, 10),
+//                    lorem.getParagraphs(4, 5),
+//                    author,
+//                    new Date(),
+//                    tags
+//            ));
+//        }
+//    }
 
     public static void main(String[] args) {
 
@@ -99,6 +63,9 @@ public class Main {
             UserServices.getInstance().create(user);
         }
 
+        //
+//        insertArticles(30);
+
         //Applying all the filters
         new Filters().aplicarFiltros();
         get("/",(request,response) ->{
@@ -115,7 +82,7 @@ public class Main {
                     .getEntityManager()
                     .createQuery("from Article a order by a.date desc", Article.class);
 
-            int endLimit= Integer.parseInt(request.params("page")) * 5;
+            int endLimit = Integer.parseInt(request.params("page")) * 5;
             int startLimit = endLimit - 5;
 
             query.setFirstResult(startLimit);
@@ -131,7 +98,7 @@ public class Main {
             atributes.put("title", "Login");
             atributes.put("userValue",request.queryParams("username"));
             return new ModelAndView(atributes,"login.ftl");
-        },freemarkerEngine);
+        }, freemarkerEngine);
 
         post("/confirmLogin", (request,response) ->{
             String username = request.queryParams("username");
@@ -198,6 +165,10 @@ public class Main {
             atributes.put("body", article.getBody());
             atributes.put("comments", article.getCommentList());
             atributes.put("tags", article.getTagList());
+
+            // Pass the votes
+            atributes.put("likes", article.countLike());
+            atributes.put("dislikes", article.countDislike());
             /*for(Articulo art : articulos){
                 if(Long.parseLong(request.params("id")) == art.getId()){
                     atributos.put("titulo",art.getTitulo());
@@ -228,57 +199,96 @@ public class Main {
         }, freemarkerEngine);
 
 
-       // Ar
-       get("/like/:id",(request,response) ->{
-           if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
-               response.redirect("/login");
-           }else {
-               Article article = ArticleServices.getInstance().find(Long.parseLong(request.params("id")));
-               article.setLikenum(article.getLikenum() + 1);
-               ArticleServices.getInstance().edit(article);
-               response.redirect("/show/" + request.params("id"));
+       post("/vote/article/:id", (request, response) -> {
+           Article article = ArticleServices.getInstance().find(Long.parseLong(request.params("id")));
+           ArticleVote vote = new ArticleVote();
+
+
+           if (request.queryParams("vote").equals("like")) {
+               vote.setArticle(article);
+               vote.setAuthor(request.session().attribute("userValue"));
+               vote.setValue(Vote.LIKE);
+           } else if (request.queryParams("vote").equals("dislike")) {
+               vote.setArticle(article);
+               vote.setAuthor(request.session().attribute("userValue"));
+               vote.setValue(Vote.DISLIKE);
            }
+
+           if (ArticleVoteServices.getInstance().find(vote.getId()) != null) {
+                ArticleVoteServices.getInstance().create(vote);
+           }
+
+           response.redirect("/show/"+article.getId());
            return null;
-       },freemarkerEngine);
+       });
 
-        get("/dislike/:id",(request,response) ->{
-            if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
-                response.redirect("/login");
-            }else {
-                Article article = ArticleServices.getInstance().find(Long.parseLong(request.params("id")));
-                article.setDislike(article.getDislike() + 1);
-                ArticleServices.getInstance().edit(article);
-                response.redirect("/show/"+request.params("id"));
+        post("/vote/comment/:id", (request, response) -> {
+            Comment comment = CommentServices.getInstance().find(Long.parseLong(request.params("id")));
+            CommentVote vote = new CommentVote();
+
+            if (request.queryParams("vote").equals("like")) {
+                vote.setComment(comment);
+                vote.setAuthor(request.session().attribute("userValue"));
+                vote.setValue(Vote.LIKE);
+            } else if (request.queryParams("vote").equals("dislike")) {
+                vote.setComment(comment);
+                vote.setAuthor(request.session().attribute("userValue"));
+                vote.setValue(Vote.DISLIKE);
             }
 
+            CommentVoteServices.getInstance().create(vote);
+            response.redirect("/show/"+comment.getArticle().getId());
             return null;
-        },freemarkerEngine);
+        });
 
-        get("/likeComment/:art_id/:id",(request,response) ->{
-            if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
-                response.redirect("/login");
-            }else {
-                Comment comment = CommentServices.getInstance().find(Long.parseLong(request.params("id")));
-                comment.setLikenum(comment.getLikenum() + 1);
-                CommentServices.getInstance().edit(comment);
-                response.redirect("/show/"+request.params("art_id"));
-            }
+//       get("/like/:id", (request,response) -> {
+//
+//           Article article = ArticleServices.getInstance().find(Long.parseLong(request.params("id")));
+//           ArticleVote like = new ArticleVote(1, request.session().attribute("userValue"), article);
+//           ArticleVoteServices.getInstance().create(like);
+//
+//           response.redirect("/show/" + request.params("id"));
+//
+//           return null;
+//       });
+//
+//        get("/dislike/:id",(request,response) ->{
+//
+//            Article article = ArticleServices.getInstance().find(Long.parseLong(request.params("id")));
+//            ArticleVote dislike = new ArticleVote(2, request.session().attribute("userValue"), article);
+//            ArticleVoteServices.getInstance().create(dislike);
+//
+//            response.redirect("/show/"+request.params("id"));
+//
+//
+//            return null;
+//        });
 
-            return null;
-        },freemarkerEngine);
-
-        get("/dislikeComment/:art_id/:id",(request,response) ->{
-            if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
-                response.redirect("/login");
-            }else{
-                Comment comment = CommentServices.getInstance().find(Long.parseLong(request.params("id")));
-                comment.setDislike(comment.getDislike() + 1);
-                CommentServices.getInstance().edit(comment);
-                response.redirect("/show/"+request.params("art_id"));
-            }
-
-            return null;
-        },freemarkerEngine);
+//        get("/likeComment/:art_id/:id",(request,response) ->{
+//            if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
+//                response.redirect("/login");
+//            }else {
+//                Comment comment = CommentServices.getInstance().find(Long.parseLong(request.params("id")));
+//                comment.setLikenum(comment.getLikenum() + 1);
+//                CommentServices.getInstance().edit(comment);
+//                response.redirect("/show/"+request.params("art_id"));
+//            }
+//
+//            return null;
+//        },freemarkerEngine);
+//
+//        get("/dislikeComment/:art_id/:id",(request,response) ->{
+//            if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
+//                response.redirect("/login");
+//            }else{
+//                Comment comment = CommentServices.getInstance().find(Long.parseLong(request.params("id")));
+//                comment.setDislike(comment.getDislike() + 1);
+//                CommentServices.getInstance().edit(comment);
+//                response.redirect("/show/"+request.params("art_id"));
+//            }
+//
+//            return null;
+//        },freemarkerEngine);
 
        get("/createUser", (request,response) ->{
             Map<String, Object> atributes = new HashMap<>();
@@ -296,15 +306,19 @@ public class Main {
             //user.setContrasena(passEncripted);
             user.setPassword(passEncripted);
             user.setName(request.queryParams("name"));
-            if(request.queryParams("role").equals("administrator")){
-                user.setAdministrator(true);
-                user.setAuthor(true);
-            }else if(request.queryParams("role").equals("author")){
-                user.setAuthor(true);
-                user.setAdministrator(false);
-            }else if(request.queryParams("role").equals("normal")){
-                user.setAdministrator(false);
-                user.setAuthor(false);
+            switch (request.queryParams("role")) {
+                case "administrator":
+                    user.setAdministrator(true);
+                    user.setAuthor(true);
+                    break;
+                case "author":
+                    user.setAuthor(true);
+                    user.setAdministrator(false);
+                    break;
+                case "normal":
+                    user.setAdministrator(false);
+                    user.setAuthor(false);
+                    break;
             }
             UserServices.getInstance().create(user);
             response.redirect("/");
@@ -332,16 +346,9 @@ public class Main {
 
             List<Tag> tags = new ArrayList<>();
 
-            // Add the tags fetched from the view to the Article object
-            for(String tagName : request.queryParams("tag").split(",")){
-                tags.add(new Tag(tagName));
-            }
-
-            // Persist the tags to the database
-            for(Tag tag :tags) {
-                TagServices.getInstance().create(tag);
-            }
-
+            // Add the tags fetched from the view to the Article object and persist it
+            String tagString = request.queryParams("tag");
+            addAndPersistTags(tags, tagString);
             article.setTagList(tags);
 
             ArticleServices.getInstance().create(article);
@@ -367,7 +374,7 @@ public class Main {
             return new ModelAndView(model, "editArticle.ftl");
         }, freemarkerEngine);
 
-        post("/editArticle/:article_id", (request, response) -> {
+       post("/editArticle/:article_id", (request, response) -> {
             Article article = ArticleServices.getInstance().find(Long.parseLong(request.params("article_id")));
             article.setTitle(request.queryParams("title"));
             article.setBody(request.queryParams("artBody"));
@@ -375,19 +382,12 @@ public class Main {
 
             List<Tag> tags = new ArrayList<>();
 
+            TagServices.getInstance().deleteAllFromArticle(article);
+
             // Add the tags fetched from the view to the Article object
-            for(String tagName : request.queryParams("tags").split(",")){
-                tags.add(new Tag(tagName));
-            }
-
-            TagServices.getInstance().deleteAll();
-
-            // Edit the tag list
-            for(Tag tag :tags) {
-                TagServices.getInstance().create(tag);
-            }
-
-            article.setTagList(tags);
+            String tagString = request.queryParams("tag");
+           addAndPersistTags(tags, tagString);
+           article.setTagList(tags);
 
             ArticleServices.getInstance().edit(article);
 
@@ -419,5 +419,18 @@ public class Main {
             response.redirect("/login");
             return null;
         });
+    }
+
+    private static void addAndPersistTags(List<Tag> tags, String tagString) {
+        for(String tagName : tagString.replaceAll(" ", "").toLowerCase().split(",")){
+            Tag newTag = TagServices.getInstance().findByTagName(tagName);
+            if (newTag != null)
+                tags.add(newTag);
+            else  {
+                newTag = new Tag(tagName);
+                tags.add(newTag);
+                TagServices.getInstance().create(newTag);
+            }
+        }
     }
 }

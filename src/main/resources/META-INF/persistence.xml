@@ -9,6 +9,8 @@
         <class>Entidades.Comment</class>
         <class>Entidades.Tag</class>
         <class>Entidades.User</class>
+        <class>Entidades.ArticleVote</class>
+        <class>Entidades.CommentVote</class>
         <properties>
             <!--<property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test" />-->
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/practica4" />

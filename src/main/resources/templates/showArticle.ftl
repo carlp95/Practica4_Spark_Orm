@@ -22,7 +22,10 @@
                 <p class="card-text" style="text-align: justify">${article.body}</p>
             </div>
 
-            <div class="card-body"> Etiquetas:
+            <hr>
+
+            <#-- Etiquetas -->
+            <div class="container"> Etiquetas:
                 <#if tags?size == 0>
                     <p class="text-danger">No hay etiquetas relacionada a este Artículo</p>
                 <#else >
@@ -31,35 +34,36 @@
                     </#list>
                 </#if>
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-sm-2">
-                        <form action="/like/${article.id}" method="get">
-                            <button class="btn btn-outline-info" data-toggle="tooltip" data-placement="bottom"
-                                    title="Me gusta" data-original-title="Me gusta" type="submit"
-                                    value="like">
-                                <i class="fa fa-thumbs-up">  Me gusta</i>
-                            </button>
-                        </form>
-                        <span class="badge badge-dark">0</span>
-                    </div>
-                    <div class="col-sm-2">
-                        <form action="/dislike/${article.id}" method="get">
-                            <button class="btn btn-outline-danger" data-toggle="tooltip" data-placement="bottom"
-                                    title="No me gusta" data-original-title="No me gusta" type="submit"
-                                    value="dislike">
-                                <i class="fa fa-thumbs-down">  No me gusta</i>
-                            </button>
-                        </form>
-                        <span class="badge badge-dark">0</span>
-                    </div>
+
+            <hr>
+
+            <#-- Valoraciones -->
+            <div class="row">
+
+                <div class="col-sm-2">
+                    <form action="/vote/article/${article.id}" method="post">
+                        <#--<button class="btn btn-outline-info" data-toggle="tooltip" data-placement="bottom" title="Me gusta" data-original-title="Me gusta" type="submit"-->
+                        <button class="btn btn-sm btn-outline-success" name="vote" value="like">
+                            <i class="fa fa-thumbs-up"></i>&nbsp;Me gusta&nbsp;<span class="badge badge-dark">${ likes }</span>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="col-sm-2">
+                    <form action="/vote/article/${article.id}" method="post">
+                        <#--<button class="btn btn-outline-danger" data-toggle="tooltip" data-placement="bottom" title="No me gusta" data-original-title="No me gusta" type="submit"-->
+                        <button class="btn btn-sm btn-outline-danger" name="vote" value="dislike">
+                            <i class="fa fa-thumbs-down"></i>&nbsp;No me gusta&nbsp;<span class="badge badge-dark">${ dislikes }</span>
+                        </button>
+                    </form>
                 </div>
 
             </div>
 
-            <div class="card-footer text-muted" style="text-align: center">
-                Autor: ${article.author.name} - ${article.date}
-            </div>
+        </div>
+
+        <div class="card-footer text-muted" style="text-align: center">
+            Autor: ${article.author.name} - ${article.date}
         </div>
     </div>
 

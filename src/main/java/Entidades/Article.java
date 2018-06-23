@@ -21,15 +21,14 @@ public class Article implements Serializable {
 
     private Date date;
 
-    private int likenum;
-
-    private int dislike;
-
     @ManyToMany()
     private List<Tag> tagList;
 
     @OneToMany(mappedBy = "article", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Comment> commentList;
+
+    @OneToMany(mappedBy = "article", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private List<ArticleVote> articleVoteList;
 
     public Article() { }
 
@@ -81,22 +80,6 @@ public class Article implements Serializable {
         this.date = date;
     }
 
-    public int getLikenum() {
-        return likenum;
-    }
-
-    public void setLikenum(int likenum) {
-        this.likenum = likenum;
-    }
-
-    public int getDislike() {
-        return dislike;
-    }
-
-    public void setDislike(int dislike) {
-        this.dislike = dislike;
-    }
-
     public List<Tag> getTagList() {
         return tagList;
     }
@@ -111,5 +94,33 @@ public class Article implements Serializable {
 
     public void setCommentList(List<Comment> commentList) {
         this.commentList = commentList;
+    }
+
+    public List<ArticleVote> getArticleVoteList() {
+        return articleVoteList;
+    }
+
+    public void setArticleVoteList(List<ArticleVote> articleVotesList) {
+        this.articleVoteList = articleVotesList;
+    }
+
+    public int countLike() {
+        int n = 0;
+        for (ArticleVote articleVote: this.articleVoteList) {
+            if (articleVote.getValue() == Vote.LIKE) {
+                n++;
+            }
+        }
+        return n;
+    }
+
+    public int countDislike() {
+        int n = 0;
+        for (ArticleVote articleVote: this.articleVoteList) {
+            if (articleVote.getValue() == Vote.DISLIKE) {
+                n++;
+            }
+        }
+        return n;
     }
 }

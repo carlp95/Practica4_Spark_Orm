@@ -1,8 +1,10 @@
 package Servicios;
 
+import Entidades.Article;
 import Entidades.Tag;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
 public class TagServices extends Dao<Tag> {
@@ -19,6 +21,33 @@ public class TagServices extends Dao<Tag> {
         return instance;
     }
 
+    // Warning: este metodo no funciona porque findByTagName no retorna null nunca sino que pasa una excepcion
+//    @Override
+//    public void create(Tag entity){
+//        EntityManager em = getEntityManager();
+//
+//        try {
+//            if (findByTagName(entity.getTagName()) != null) {
+//                System.out.println("\t/!\\ This tag is already persisted. Creation canceled.");
+//                return ;
+//            }
+//        }catch (IllegalArgumentException ie){
+//            System.out.println("Illegal parameter.");
+//        }
+//
+//        try {
+//            em.getTransaction().begin();
+//            em.persist(entity);
+//            em.getTransaction().commit();
+//        }catch (Exception ex){
+//            em.getTransaction().rollback();
+//            System.out.println(ex.getMessage());
+//            throw  ex;
+//        } finally {
+//            em.close();
+//        }
+//    }
+
     public Tag findByTagName(String tagName) {
         EntityManager em = getEntityManager();
         try {
@@ -27,18 +56,20 @@ public class TagServices extends Dao<Tag> {
             query.setParameter("tagName", tagName);
 
             return query.getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
         } finally {
             em.close();
         }
     }
 
-    public void deleteAll() {
+    public void deleteAllFromArticle(Article article) {
         EntityManager em = getEntityManager();
         try {
             em.getTransaction().begin();
-            em.createQuery("delete Tag").executeUpdate();
+            em.createNativeQuery("delete from ARTICLE_TAG where ARTICLELIST_ID = " + article.getId())
+                    .executeUpdate();
             em.getTransaction().commit();
-
         } catch (Exception ex) {
             em.getTransaction().rollback();
             throw ex;

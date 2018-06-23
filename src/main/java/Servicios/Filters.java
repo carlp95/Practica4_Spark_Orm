@@ -56,29 +56,39 @@ public class Filters {
             }
         });
 
-        before("/like/*", (request,response) ->{
+
+        // Filtro por voto
+        before("/vote/*", (request, response) -> {
             if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
                 response.redirect("/login");
             }
+            System.out.println("voto alguien");
         });
 
-        before("/dislike/*", (request,response) ->{
-            if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
-                response.redirect("/login");
-            }
-        });
-
-        before("/likeComment/*", (request,response) ->{
-            if( request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
-                response.redirect("/login");
-            }
-        });
-
-        before("/dislikeComment/*", (request,response) ->{
-            if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
-                response.redirect("/login");
-            }
-        });
+        //
+//        before("/like/*", (request,response) ->{
+//            if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
+//                response.redirect("/login");
+//            }
+//        });
+//
+//        before("/dislike/*", (request,response) ->{
+//            if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
+//                response.redirect("/login");
+//            }
+//        });
+//
+//        before("/likeComment/*", (request,response) ->{
+//            if( request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
+//                response.redirect("/login");
+//            }
+//        });
+//
+//        before("/dislikeComment/*", (request,response) ->{
+//            if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
+//                response.redirect("/login");
+//            }
+//        });
 
         before("/createArticle",(request, response) -> {
             //String username = ((User) request.session().attribute("userValue")).getUsername();

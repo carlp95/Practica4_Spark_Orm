@@ -1,10 +1,8 @@
 package Entidades;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 public class Comment implements Serializable {
@@ -14,15 +12,22 @@ public class Comment implements Serializable {
 
     private String body;
 
-    private int likenum;
-
-    private int dislike;
-
-    @ManyToOne
+    @ManyToOne()
     private User author;
 
-    @ManyToOne
+    @ManyToOne()
     private Article article;
+
+    @OneToMany(mappedBy = "comment", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private List<CommentVote> commentVoteList;
+
+    public List<CommentVote> getCommentVoteList() {
+        return commentVoteList;
+    }
+
+    public void setCommentVoteList(List<CommentVote> commentVoteList) {
+        this.commentVoteList = commentVoteList;
+    }
 
     public Comment() { }
 
@@ -62,21 +67,5 @@ public class Comment implements Serializable {
 
     public void setArticle(Article article) {
         this.article = article;
-    }
-
-    public int getLikenum() {
-        return likenum;
-    }
-
-    public void setLikenum(int likenum) {
-        this.likenum = likenum;
-    }
-
-    public int getDislike() {
-        return dislike;
-    }
-
-    public void setDislike(int dislike) {
-        this.dislike = dislike;
     }
 }

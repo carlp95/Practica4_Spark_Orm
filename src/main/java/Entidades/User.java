@@ -25,6 +25,12 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "author")
     private List<Article> articleList;
 
+    @OneToMany(mappedBy = "author")
+    private List<ArticleVote> articleVotesList;
+
+    @OneToMany(mappedBy = "author")
+    private List<CommentVote> commentVoteList;
+
     public User() { }
 
     public User(String username, String name, String password, boolean isAdministrator, boolean isAuthor) {
@@ -89,5 +95,21 @@ public class User implements Serializable {
 
     public void setAuthor(boolean author) {
         isAuthor = author;
+    }
+
+    public List<ArticleVote> getArticleVotesList() {
+        return articleVotesList;
+    }
+
+    public void setArticleVotesList(List<ArticleVote> articleVotesList) {
+        this.articleVotesList = articleVotesList;
+    }
+
+    public List<CommentVote> getCommentVoteList() {
+        return commentVoteList;
+    }
+
+    public void setCommentVoteList(List<CommentVote> commentVoteList) {
+        this.commentVoteList = commentVoteList;
     }
 }
