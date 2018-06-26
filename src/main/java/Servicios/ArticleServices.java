@@ -48,12 +48,15 @@ public class ArticleServices extends Dao<Article> {
         }
     }
 
-    public List<Article> findAllWithTag(String tagName) {
+    public List<Article> findAllWithTag(String tagName, int startPosition, int maxResult) {
         EntityManager em = getEntityManager();
         try {
             Tag tag = TagServices.getInstance().findByTagName(tagName);
 
             Query query = em.createNativeQuery("select ARTICLELIST_ID from ARTICLE_TAG where TAGLIST_ID = "+tag.getId());
+
+            query.setFirstResult(startPosition);
+            query.setMaxResults(maxResult);
 
             List<Article> articles = new ArrayList<>();
 

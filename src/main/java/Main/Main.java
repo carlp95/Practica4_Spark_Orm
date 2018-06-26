@@ -141,6 +141,7 @@ public class Main {
                 }else{
                     halt(401,"Credenciales invalidas...");
                 }
+
                 response.redirect("/");
             }
             return null;
@@ -158,6 +159,7 @@ public class Main {
         get("/show/:id",(request, response) ->{
             Map<String, Object> atributes = new HashMap<>();
             atributes.put("userValue", request.session().attribute("userValue"));
+
             //List<Articulo> articulos = Dao.getInstance().getArticulos();
             Article article = ArticleServices.getInstance().find(Long.parseLong(request.params("id")));
             atributes.put("article",article);
@@ -184,38 +186,42 @@ public class Main {
             return new ModelAndView(atributes,"showArticle.ftl");
         },freemarkerEngine);
 
-       post("show/createComment/:id",(request,response)->{
+       post("show/createComment/:id",(request,response) ->{
            Comment comment = new Comment(request.queryParams("comment"),
                         request.session().attribute("userValue"),
                         ArticleServices.getInstance().find(Long.parseLong(request.params(("id")))));
+
            CommentServices.getInstance().create(comment);
-                /*comentario.setComentario(request.queryParams("comentario"));
-                comentario.setAutor(((Usuario)request.session().attribute("usuarioValue")).getUsername());
-                comentario.setArticulo(Long.parseLong(request.params("id")));
-                Dao.getInstance().insertarComentario(comentario);*/
+
            response.redirect("/show/" + request.params("id"));
 
             return null;
-        }, freemarkerEngine);
+        });
 
 
        post("/vote/article/:id", (request, response) -> {
            Article article = ArticleServices.getInstance().find(Long.parseLong(request.params("id")));
-           ArticleVote vote = new ArticleVote();
-
+           ArticleVote newArticleVote = new ArticleVote();
 
            if (request.queryParams("vote").equals("like")) {
-               vote.setArticle(article);
-               vote.setAuthor(request.session().attribute("userValue"));
-               vote.setValue(Vote.LIKE);
+               newArticleVote.setArticle(article);
+               newArticleVote.setAuthor(request.session().attribute("userValue"));
+               newArticleVote.setValue(Vote.LIKE);
            } else if (request.queryParams("vote").equals("dislike")) {
-               vote.setArticle(article);
-               vote.setAuthor(request.session().attribute("userValue"));
-               vote.setValue(Vote.DISLIKE);
+               newArticleVote.setArticle(article);
+               newArticleVote.setAuthor(request.session().attribute("userValue"));
+               newArticleVote.setValue(Vote.DISLIKE);
            }
 
-           if (ArticleVoteServices.getInstance().find(vote.getId()) != null) {
-                ArticleVoteServices.getInstance().create(vote);
+           ArticleVote articleVoteExistent = ArticleVoteServices.getInstance().findByAuthorArticle(newArticleVote);
+
+           if (articleVoteExistent != null) {
+               newArticleVote.setId(articleVoteExistent.getId());
+               ArticleVoteServices.getInstance().edit(newArticleVote);
+               System.out.println("Your vote for this article was modified!");
+           } else {
+               ArticleVoteServices.getInstance().create(newArticleVote);
+               System.out.println("You voted this article!");
            }
 
            response.redirect("/show/"+article.getId());
@@ -224,19 +230,29 @@ public class Main {
 
         post("/vote/comment/:id", (request, response) -> {
             Comment comment = CommentServices.getInstance().find(Long.parseLong(request.params("id")));
-            CommentVote vote = new CommentVote();
+            CommentVote newCommentVote = new CommentVote();
 
             if (request.queryParams("vote").equals("like")) {
-                vote.setComment(comment);
-                vote.setAuthor(request.session().attribute("userValue"));
-                vote.setValue(Vote.LIKE);
+                newCommentVote.setComment(comment);
+                newCommentVote.setAuthor(request.session().attribute("userValue"));
+                newCommentVote.setValue(Vote.LIKE);
             } else if (request.queryParams("vote").equals("dislike")) {
-                vote.setComment(comment);
-                vote.setAuthor(request.session().attribute("userValue"));
-                vote.setValue(Vote.DISLIKE);
+                newCommentVote.setComment(comment);
+                newCommentVote.setAuthor(request.session().attribute("userValue"));
+                newCommentVote.setValue(Vote.DISLIKE);
             }
 
-            CommentVoteServices.getInstance().create(vote);
+            CommentVote commentVoteExistent = CommentVoteServices.getInstance().findByAuthorComment(newCommentVote);
+
+            if ( commentVoteExistent != null) {
+                newCommentVote.setId(commentVoteExistent.getId());
+                CommentVoteServices.getInstance().edit(newCommentVote);
+                System.out.println("Your vote for this comment was modified!");
+            } else {
+                CommentVoteServices.getInstance().create(newCommentVote);
+                System.out.println("You voted this comment!");
+            }
+
             response.redirect("/show/"+comment.getArticle().getId());
             return null;
         });
@@ -402,14 +418,25 @@ public class Main {
             return null;
         }, freemarkerEngine);
 
-        get("/tag/:tagName", (request, response) -> {
+//        get("/tag/*/", (request, response) -> {
+//            response.redirect("/tag/:tagName/1");
+//        });
+
+
+        get("/tag/:tagName/:page", (request, response) -> {
             Map<String, Object> model = new HashMap<>();
 
             model.put("title", "Buscando Artículos por tag");
             model.put("userValue", request.session().attribute("userValue"));
             model.put("searchTag", request.params("tagName"));
+
+            int endLimit = Integer.parseInt(request.params("page")) * 5;
+            int startLimit = endLimit - 5;
+
             model.put("articlesFiltered",
-                    ArticleServices.getInstance().findAllWithTag(request.params("tagName")));
+                    ArticleServices.getInstance().findAllWithTag(request.params("tagName"), startLimit, endLimit));
+
+            model.put("page", Integer.parseInt(request.params("page")));
 
             return new ModelAndView(model, "searchPerTag.ftl");
         }, freemarkerEngine);

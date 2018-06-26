@@ -23,6 +23,11 @@ body {
     padding: 20px;
 }
 
+.likes-panel form {
+    display: inline-grid;
+    margin-right: 6px;
+}
+
 /* For an more sophisticate tags editing in the future... or not*/
 .tag {
 

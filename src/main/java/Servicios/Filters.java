@@ -33,7 +33,7 @@ public class Filters {
             }
         });
 
-        after("/show/createComment/*", (request, response) -> {
+        before("/show/createComment/*", (request, response) -> {
             if(request.session().attribute("userValue").equals("vacio") || request.session().attribute("userValue") == null) {
                 response.redirect("/login");
             }
@@ -62,7 +62,6 @@ public class Filters {
             if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
                 response.redirect("/login");
             }
-            System.out.println("voto alguien");
         });
 
         //

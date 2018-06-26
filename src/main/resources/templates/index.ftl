@@ -17,7 +17,7 @@
                     </div>
                     <div class="card-footer">
                         <#list article.tagList as e>
-                            <a class="badge badge-primary" href="/tag/${ e.tagName }">${ e.tagName }</a>
+                            <a class="badge badge-primary" href="/tag/${ e.tagName }/1">${ e.tagName }</a>
                         <#else>
                             <p class="text-danger">No hay etiquetas relacionada a este Artículo</p>
                         </#list>

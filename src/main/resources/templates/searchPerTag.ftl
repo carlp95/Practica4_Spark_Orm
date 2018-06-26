@@ -23,7 +23,7 @@
                             <#if searchTag == e.tagName>
                                 <span class="badge badge-success">${ e.tagName }</span>
                             <#else>
-                                <a href="/tag/${ e.tagName }" class="badge badge-primary">${ e.tagName }</a>
+                                <a href="/tag/${ e.tagName }/1" class="badge badge-primary">${ e.tagName }</a>
                             </#if>
                         <#else>
                             <p class="text-danger">No hay etiquetas relacionada a este Artículo</p>
@@ -33,6 +33,17 @@
             </#items>
         </ul>
     </#list>
+
+    <nav aria-label="Navegacion entre los resultados filtrados">
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <a class="page-link" href="/tag/${ searchTag }/${page - 1}" tabindex="-1"><i class="fa fa-angle-double-left"> Anterior</i></a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="/tag/${ searchTag }/${page + 1}">Siguiente <i class="fa fa-angle-double-right"></i></a>
+            </li>
+        </ul>
+    </nav>
 
 </@gen.base>
 
