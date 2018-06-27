@@ -13,7 +13,7 @@ public class Tag implements Serializable {
     @Column(unique = true)
     private String tagName;
 
-    @ManyToMany(mappedBy = "tagList")
+    @ManyToMany(mappedBy = "tagList", fetch = FetchType.EAGER)
     private List<Article> articleList;
 
     public Tag() { }

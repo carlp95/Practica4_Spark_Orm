@@ -9,11 +9,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link  href="https://bootswatch.com/4/darkly/bootstrap.css" rel="stylesheet"/>
     <link rel="stylesheet" href="/css/main.css">
+    <link rel="icon"
+          type="image/x-icon"
+          href="/images/favicon.ico">
 </head>
 <body>
 
-
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <header class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="/">Banana Blog</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation" style="">
             <span class="navbar-toggler-icon"></span>
@@ -48,7 +50,7 @@
             <a href="/login"><button class="btn btn-secundary">Iniciar Sesión</button></a>
         </#if>
 
-    </nav>
+    </header>
 
     <#--contenido-->
     <div class="content">

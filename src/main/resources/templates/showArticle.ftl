@@ -8,18 +8,18 @@
             <#if userValue != "vacio">
                 <#if userValue.username == article.author.username>
                 <a href="/editArticle/${ article.id }">
-                    <button class="btn btn-primary"><i class="fa fa-edit"></i> Editar</button>
+                    <button class="btn btn-sm btn-primary"><i class="fa fa-edit"></i> Editar</button>
                 </a>
 
                 <a href="/deleteArticle/${ article.id }">
-                    <button class="btn btn-danger"><i class="fa fa-trash"></i> Eliminar</button>
+                    <button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Eliminar</button>
                 </a>
                 </#if>
             </#if>
         </div>
 
         <div class="card-body">
-            <p class="card-text" style="text-align: justify">${article.body}</p>
+            <p class="card-text" style="text-align: justify">${article.body}</p>0
 
             <hr>
 
@@ -41,7 +41,7 @@
             <div class="likes-panel">
                 <form action="/vote/article/${article.id}" method="post">
                     <#--<button class="btn btn-outline-info" data-toggle="tooltip" data-placement="bottom" title="Me gusta" data-original-title="Me gusta" type="submit"-->
-                    <button class="btn btn-sm btn-outline-info" name="vote" value="like">
+                    <button class="btn btn-sm btn-outline-success" name="vote" value="like">
                         <i class="fa fa-thumbs-up"></i>&nbsp;Me gusta&nbsp;<span class="badge badge-dark">${ likes }</span>
                     </button>
                 </form>
@@ -95,11 +95,15 @@
                     <#if userValue != "vacio">
                         <div class="likes-panel">
                             <form method="post" action="/vote/comment/${ com.id }">
-                                <button class="btn btn-sm btn-outline-info" value="like" name="vote" data-toggle="tooltip" data-placement="bottom" title="Me gusta" data-original-title="Me gusta"><i class="fa fa-thumbs-up"></i>&nbsp;Me gusta&nbsp;<span class="badge badge-dark">0</span></button>
+                                <button class="btn btn-sm btn-outline-success" value="like" name="vote" data-toggle="tooltip" data-placement="bottom" title="Me gusta" data-original-title="Me gusta">
+                                    <i class="fa fa-thumbs-up"></i>&nbsp;Me gusta&nbsp;<span class="badge badge-dark">0</span>
+                                </button>
                             </form>
 
                             <form method="post" action="/vote/comment/${ com.id }">
-                                <button class="btn btn-sm btn-outline-danger" value="dislike" name="vote" data-toggle="tooltip" data-placement="bottom" title="No me gusta" data-original-title="No me gusta"><i class="fa fa-thumbs-down"></i>&nbsp;No me gusta&nbsp;<span class="badge badge-dark">0</span></button>
+                                <button class="btn btn-sm btn-outline-danger" value="dislike" name="vote" data-toggle="tooltip" data-placement="bottom" title="No me gusta" data-original-title="No me gusta">
+                                    <i class="fa fa-thumbs-down"></i>&nbsp;No me gusta&nbsp;<span class="badge badge-dark">0</span>
+                                </button>
                             </form>
                         </div>
                     </#if>

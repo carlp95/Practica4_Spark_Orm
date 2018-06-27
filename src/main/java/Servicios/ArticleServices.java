@@ -29,6 +29,7 @@ public class ArticleServices extends Dao<Article> {
         try{
             TypedQuery<Article> query =
                     em.createQuery("select distinct a from Article a join fetch a.tagList where a.id = :id", Article.class);
+//                    em.createQuery("select a from Article a where a.id = :id", Article.class);
             query.setParameter("id", id);
             return query.getSingleResult();
         } finally {

@@ -65,29 +65,6 @@ public class Filters {
         });
 
         //
-//        before("/like/*", (request,response) ->{
-//            if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
-//                response.redirect("/login");
-//            }
-//        });
-//
-//        before("/dislike/*", (request,response) ->{
-//            if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
-//                response.redirect("/login");
-//            }
-//        });
-//
-//        before("/likeComment/*", (request,response) ->{
-//            if( request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
-//                response.redirect("/login");
-//            }
-//        });
-//
-//        before("/dislikeComment/*", (request,response) ->{
-//            if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
-//                response.redirect("/login");
-//            }
-//        });
 
         before("/createArticle",(request, response) -> {
             //String username = ((User) request.session().attribute("userValue")).getUsername();
@@ -102,17 +79,29 @@ public class Filters {
         });
 
         before("/editArticle/*",(request, response) -> {
-            if(UserServices.getInstance().find(request.session().attribute("userValue")) == null || request.session().attribute("userValue") == null
+            if(UserServices.getInstance().find((( User ) request.session().attribute("userValue")).getUsername()) == null || request.session().attribute("userValue") == null
                     || request.session().attribute("userValue").equals("vacio")){
                 response.redirect("/login");
             }else {
-                User user = UserServices.getInstance().find(request.session().attribute("userValue"));
+                User user = UserServices.getInstance().find((( User ) request.session().attribute("userValue")).getUsername());
                 if(!user.isAdministrator() && !user.isAuthor()){
                     response.redirect("/error");
                 }
             }
 
         });
+
+//        before("/deleteArticle/*",(request, response) -> {
+//            //String username = ((User) request.session().attribute("userValue")).getUsername();
+//            if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
+//                response.redirect("/login");
+//            }else {
+//                User user = UserServices.getInstance().find(((User)request.session().attribute("userValue")).getUsername());
+//                if(!user.isAdministrator() && !user.isAuthor()){
+//                    response.redirect("/error");
+//                }
+//            }
+//        });
     }
 
 }

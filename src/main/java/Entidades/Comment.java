@@ -21,20 +21,21 @@ public class Comment implements Serializable {
     @OneToMany(mappedBy = "comment", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<CommentVote> commentVoteList;
 
-    public List<CommentVote> getCommentVoteList() {
-        return commentVoteList;
-    }
-
-    public void setCommentVoteList(List<CommentVote> commentVoteList) {
-        this.commentVoteList = commentVoteList;
-    }
-
     public Comment() { }
 
     public Comment(String body, User author, Article article) {
         this.body = body;
         this.author = author;
         this.article = article;
+    }
+
+
+    public List<CommentVote> getCommentVoteList() {
+        return commentVoteList;
+    }
+
+    public void setCommentVoteList(List<CommentVote> commentVoteList) {
+        this.commentVoteList = commentVoteList;
     }
 
     public long getId() {

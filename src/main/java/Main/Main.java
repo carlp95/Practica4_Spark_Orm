@@ -160,28 +160,17 @@ public class Main {
             Map<String, Object> atributes = new HashMap<>();
             atributes.put("userValue", request.session().attribute("userValue"));
 
-            //List<Articulo> articulos = Dao.getInstance().getArticulos();
             Article article = ArticleServices.getInstance().find(Long.parseLong(request.params("id")));
+
+            atributes.put("title", "Lista de articulos"); //Este es el titulo de la pagina
             atributes.put("article",article);
-            atributes.put("title", article.getTitle());
-            atributes.put("body", article.getBody());
             atributes.put("comments", article.getCommentList());
             atributes.put("tags", article.getTagList());
 
             // Pass the votes
             atributes.put("likes", article.countLike());
             atributes.put("dislikes", article.countDislike());
-            /*for(Articulo art : articulos){
-                if(Long.parseLong(request.params("id")) == art.getId()){
-                    atributos.put("titulo",art.getTitulo());
-                    atributos.put("articulo",art);
-
-                    atributos.put("comentarios",Dao.getInstance().getComentarios(art.getId()));
-
-                    atributos.put("etiquetas",Dao.getInstance().getEtiquetas(art.getId()));
-
-                }
-            }*/
+//            atributes.put("commentLikes")
 
             return new ModelAndView(atributes,"showArticle.ftl");
         },freemarkerEngine);
@@ -257,54 +246,6 @@ public class Main {
             return null;
         });
 
-//       get("/like/:id", (request,response) -> {
-//
-//           Article article = ArticleServices.getInstance().find(Long.parseLong(request.params("id")));
-//           ArticleVote like = new ArticleVote(1, request.session().attribute("userValue"), article);
-//           ArticleVoteServices.getInstance().create(like);
-//
-//           response.redirect("/show/" + request.params("id"));
-//
-//           return null;
-//       });
-//
-//        get("/dislike/:id",(request,response) ->{
-//
-//            Article article = ArticleServices.getInstance().find(Long.parseLong(request.params("id")));
-//            ArticleVote dislike = new ArticleVote(2, request.session().attribute("userValue"), article);
-//            ArticleVoteServices.getInstance().create(dislike);
-//
-//            response.redirect("/show/"+request.params("id"));
-//
-//
-//            return null;
-//        });
-
-//        get("/likeComment/:art_id/:id",(request,response) ->{
-//            if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
-//                response.redirect("/login");
-//            }else {
-//                Comment comment = CommentServices.getInstance().find(Long.parseLong(request.params("id")));
-//                comment.setLikenum(comment.getLikenum() + 1);
-//                CommentServices.getInstance().edit(comment);
-//                response.redirect("/show/"+request.params("art_id"));
-//            }
-//
-//            return null;
-//        },freemarkerEngine);
-//
-//        get("/dislikeComment/:art_id/:id",(request,response) ->{
-//            if(request.session().attribute("userValue") == null || request.session().attribute("userValue").equals("vacio")){
-//                response.redirect("/login");
-//            }else{
-//                Comment comment = CommentServices.getInstance().find(Long.parseLong(request.params("id")));
-//                comment.setDislike(comment.getDislike() + 1);
-//                CommentServices.getInstance().edit(comment);
-//                response.redirect("/show/"+request.params("art_id"));
-//            }
-//
-//            return null;
-//        },freemarkerEngine);
 
        get("/createUser", (request,response) ->{
             Map<String, Object> atributes = new HashMap<>();
@@ -401,7 +342,7 @@ public class Main {
             TagServices.getInstance().deleteAllFromArticle(article);
 
             // Add the tags fetched from the view to the Article object
-            String tagString = request.queryParams("tag");
+            String tagString = request.queryParams("tags");
            addAndPersistTags(tags, tagString);
            article.setTagList(tags);
 
@@ -414,14 +355,9 @@ public class Main {
         get("/deleteArticle/:article_id", (request, response) -> {
             ArticleServices.getInstance().delete(Long.parseLong(request.params("article_id")));
 
-            response.redirect("/show/" + request.params("article_id"));
+            response.redirect("/");
             return null;
-        }, freemarkerEngine);
-
-//        get("/tag/*/", (request, response) -> {
-//            response.redirect("/tag/:tagName/1");
-//        });
-
+        });
 
         get("/tag/:tagName/:page", (request, response) -> {
             Map<String, Object> model = new HashMap<>();
@@ -449,15 +385,18 @@ public class Main {
     }
 
     private static void addAndPersistTags(List<Tag> tags, String tagString) {
-        for(String tagName : tagString.replaceAll(" ", "").toLowerCase().split(",")){
-            Tag newTag = TagServices.getInstance().findByTagName(tagName);
-            if (newTag != null)
-                tags.add(newTag);
-            else  {
-                newTag = new Tag(tagName);
-                tags.add(newTag);
-                TagServices.getInstance().create(newTag);
+        try {
+            for (String tagName : tagString.replaceAll(" ", "").toLowerCase().split(",")) {
+                Tag newTag = TagServices.getInstance().findByTagName(tagName);
+                if (newTag != null) tags.add(newTag);
+                else {
+                    newTag = new Tag(tagName);
+                    tags.add(newTag);
+                    TagServices.getInstance().create(newTag);
+                }
             }
+        } catch (NullPointerException ne) {
+            ne.getStackTrace();
         }
     }
 }
