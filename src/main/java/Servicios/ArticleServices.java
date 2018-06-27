@@ -54,7 +54,9 @@ public class ArticleServices extends Dao<Article> {
         try {
             Tag tag = TagServices.getInstance().findByTagName(tagName);
 
-            Query query = em.createNativeQuery("select ARTICLELIST_ID from ARTICLE_TAG where TAGLIST_ID = "+tag.getId());
+            //El ORDER BY es muy importante aqui para ordenar descendentemente los articulos filtrados
+            Query query = em.createNativeQuery("select ARTICLELIST_ID from ARTICLE_TAG where TAGLIST_ID = "+tag.getId()
+                    + " order by (select ARTICLE.DATE from ARTICLE where ARTICLE.ID = ARTICLELIST_ID) desc ");
 
             query.setFirstResult(startPosition);
             query.setMaxResults(maxResult);

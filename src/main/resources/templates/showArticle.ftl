@@ -19,7 +19,7 @@
         </div>
 
         <div class="card-body">
-            <p class="card-text" style="text-align: justify">${article.body}</p>0
+            <p class="card-text" style="text-align: justify">${ article.body }</p>
 
             <hr>
 
@@ -34,26 +34,26 @@
                 </#if>
             </div>
 
-            <hr>
+        <#-- Valoraciones articulo-->
+            <div class="container">
+                <#if userValue != "vacio">
+                <div class="likes-panel">
+                    <form action="/vote/article/${article.id}" method="post">
+                        <#--<button class="btn btn-outline-info" data-toggle="tooltip" data-placement="bottom" title="Me gusta" data-original-title="Me gusta" type="submit"-->
+                        <button class="btn btn-sm btn-outline-success" name="vote" value="like">
+                            <i class="fa fa-thumbs-up"></i>&nbsp;Me gusta&nbsp;<span class="badge badge-dark">${ likes }</span>
+                        </button>
+                    </form>
 
-            <#-- Valoraciones articulo-->
-            <#if userValue != "vacio">
-            <div class="likes-panel">
-                <form action="/vote/article/${article.id}" method="post">
-                    <#--<button class="btn btn-outline-info" data-toggle="tooltip" data-placement="bottom" title="Me gusta" data-original-title="Me gusta" type="submit"-->
-                    <button class="btn btn-sm btn-outline-success" name="vote" value="like">
-                        <i class="fa fa-thumbs-up"></i>&nbsp;Me gusta&nbsp;<span class="badge badge-dark">${ likes }</span>
-                    </button>
-                </form>
-
-                <form action="/vote/article/${article.id}" method="post">
-                    <#--<button class="btn btn-outline-danger" data-toggle="tooltip" data-placement="bottom" title="No me gusta" data-original-title="No me gusta" type="submit"-->
-                    <button class="btn btn-sm btn-outline-danger" name="vote" value="dislike">
-                        <i class="fa fa-thumbs-down"></i>&nbsp;No me gusta&nbsp;<span class="badge badge-dark">${ dislikes }</span>
-                    </button>
-                </form>
+                    <form action="/vote/article/${article.id}" method="post">
+                        <#--<button class="btn btn-outline-danger" data-toggle="tooltip" data-placement="bottom" title="No me gusta" data-original-title="No me gusta" type="submit"-->
+                        <button class="btn btn-sm btn-outline-danger" name="vote" value="dislike">
+                            <i class="fa fa-thumbs-down"></i>&nbsp;No me gusta&nbsp;<span class="badge badge-dark">${ dislikes }</span>
+                        </button>
+                    </form>
+                </div>
+                </#if>
             </div>
-            </#if>
         </div>
 
         <div class="card-footer text-muted" style="text-align: center">
