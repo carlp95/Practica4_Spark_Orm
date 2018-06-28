@@ -31,10 +31,10 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/createArticle">Crear Artículo</a>
                         </li>
-                        <#else >
-                            <li class="nav-item">
-                                <a class="nav-link" href="/createArticle">Crear Artículo</a>
-                            </li>
+                    <#elseif user.author>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/createArticle">Crear Artículo</a>
+                        </li>
                     </#if>
 
                 </ul>

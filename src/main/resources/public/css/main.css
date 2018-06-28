@@ -23,6 +23,10 @@ body {
     padding: 20px;
 }
 
+.likes-panel {
+    margin: 12px 0;
+}
+
 .likes-panel form {
     display: inline-grid;
     margin-right: 6px;

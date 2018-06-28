@@ -5,13 +5,13 @@
     <#list articles>
         <ul>
             <#items as article>
-                <div class="card mx-auto mb-3" style="width: 750px">
+                <div class="card border-secondary mx-auto mb-3" style="width: 750px">
                     <div class="card-body">
                         <a href="/show/${ article.id }"><h2>${ article.title }</h2></a>
                         <#if article.body?length &lt; 70>
                                 <p>${ article.body }</p>
                             <#else >
-                                <p>${ article.body[0..70]}...</p>
+                                <p>${ article.body[0..70]} ...</p>
                         </#if>
 
                     </div>

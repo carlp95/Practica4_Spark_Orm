@@ -2,6 +2,7 @@ package Entidades;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -122,5 +123,21 @@ public class Article implements Serializable {
             }
         }
         return n;
+    }
+
+    public List<Integer> commentLikesCountList() {
+        List<Integer> countList = new ArrayList<>();
+        for (Comment comment : this.getCommentList()) {
+            countList.add(comment.countLike());
+        }
+        return countList;
+    }
+
+    public List<Integer> commentDislikesCountList() {
+        List<Integer> countList = new ArrayList<>();
+        for (Comment comment : this.getCommentList()) {
+            countList.add(comment.countDislike());
+        }
+        return countList;
     }
 }

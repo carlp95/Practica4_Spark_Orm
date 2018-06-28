@@ -121,7 +121,7 @@ public class Main {
                 }
             }
             if(request.queryParams("remember") == null) {
-
+                //TODO - todo esto no deberia ir en un filtro?
                 boolean verify = encryptorPass.checkPassword(password, UserServices.getInstance().find(request.queryParams("username")).getPassword());
                 if(verify){
                     request.session(true).attribute("userValue",UserServices.getInstance().find(request.queryParams("username")));
@@ -157,22 +157,24 @@ public class Main {
         },freemarkerEngine);
 
         get("/show/:id",(request, response) ->{
-            Map<String, Object> atributes = new HashMap<>();
-            atributes.put("userValue", request.session().attribute("userValue"));
+            Map<String, Object> model = new HashMap<>();
+            model.put("userValue", request.session().attribute("userValue"));
 
             Article article = ArticleServices.getInstance().find(Long.parseLong(request.params("id")));
 
-            atributes.put("title", "Lista de articulos"); //Este es el titulo de la pagina
-            atributes.put("article",article);
-            atributes.put("comments", article.getCommentList());
-            atributes.put("tags", article.getTagList());
+            model.put("title", "Lista de articulos"); //Este es el titulo de la pagina
+            model.put("article",article);
+            model.put("comments", article.getCommentList());
+            model.put("tags", article.getTagList());
 
             // Pass the votes
-            atributes.put("likes", article.countLike());
-            atributes.put("dislikes", article.countDislike());
+            model.put("likes", article.countLike());
+            model.put("dislikes", article.countDislike());
+            model.put("commentLikesList", article.commentLikesCountList());
+            model.put("commentDislikesList", article.commentDislikesCountList());
 //            atributes.put("commentLikes")
 
-            return new ModelAndView(atributes,"showArticle.ftl");
+            return new ModelAndView(model,"showArticle.ftl");
         },freemarkerEngine);
 
        post("show/createComment/:id",(request,response) ->{

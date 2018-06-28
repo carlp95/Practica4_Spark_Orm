@@ -69,4 +69,24 @@ public class Comment implements Serializable {
     public void setArticle(Article article) {
         this.article = article;
     }
+
+    public int countLike() {
+        int n = 0;
+        for (CommentVote commentVote: this.commentVoteList) {
+            if (commentVote.getValue() == Vote.LIKE) {
+                n++;
+            }
+        }
+        return n;
+    }
+
+    public int countDislike() {
+        int n = 0;
+        for (CommentVote commentVote: this.commentVoteList) {
+            if (commentVote.getValue() == Vote.DISLIKE) {
+                n++;
+            }
+        }
+        return n;
+    }
 }
